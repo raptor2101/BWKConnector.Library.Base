@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="player_state_lost">#646464</color>
+    <color name="player_state_aborted">#3C0000</color>
+    <color name="player_state_timeout">#3C0000</color>
+    <color name="player_state_won">#003C00</color>
+    <color name="player_state_playing">#00000000</color>
+    <color name="player_state_unknown">#00000000</color>
+    
+</resources>

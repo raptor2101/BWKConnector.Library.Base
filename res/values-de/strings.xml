@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BWK:Connector</string>
+    
+    <string name="action_settings">Einstellungen</string>
+    <string name="action_refresh">Aktualisieren</string>
+    <string name="game_info_view_label_state">"Status:"</string>
+    <string name="game_info_view_label_round">"Runde:"</string>
+    <string name="game_info_view_label_player_count">Spieler:</string>
+    <string name="game_info_view_label_players">Spieler</string>
+    <string name="game_info_view_label_date">Datum</string>
+    
+    <string name="label_player_info_view_LastMessage">Letzte Nachricht</string>
+    
+    <string name="title_activity_settings">Einstellungen</string>
+    <string name="setting_label_email">E-Mail</string>
+    <string name="setting_label_password">Passwort</string>
+    <string name="setting_label_notification">Benachrichtigung</string>
+    <string name="setting_label_updatecycle">Aktualisierungszyklus</string>
+    <string name="setting_checkbox_pendinggames">Spiele mit offenen Zügen</string>
+    <string name="setting_checkbox_newmessages">Neue Nachrichten</string>
+    <string name="setting_button_save">Übernehmen</string>
+    <string name="setting_button_discard">Verwerfen</string>
+    <string name="setting_label_LoginInformation">Account-Informationen</string>
+    
+    <string name="game_info_state_running">Laufend</string>
+    <string name="game_info_state_ended">Beendet</string>
+    <string name="game_info_state_lost">Verloren</string>
+    <string name="game_info_state_won">Gewonnen</string>
+    <string name="game_info_state_pending">Am Zug</string>
+    <string name="game_info_state_waiting">Wartend</string>
+    <string name="game_info_state_open">Offen</string>
+    <string name="game_info_state_aborted">Abgebrochen</string>
+    <string name="game_info_state_unknown">Unbekannt</string>
+    
+    
+    <string name="player_info_state_aborted">Abgebrochen</string>
+    <string name="player_info_state_playing">Spielend</string>
+    <string name="player_info_state_lost">Verloren</string>
+    <string name="player_info_state_won">Gewonnen</string>
+    <string name="player_info_state_timeout">Timeout</string>
+    <string name="player_info_state_unknown">Unbekannt</string>
+    
+    <string name="message_games_pending">%d Spiele warten auf deinen Zug.</string>
+    <string name="date_format_string">"dd.MM.yyyy HH:mm"</string>
+    
+    <string-array name="setting_spinner_updatecycle">
+        <item>10 Minuten</item>
+        <item>20 Minuten</item>
+        <item>30 Minuten</item>
+        <item>1  Stunden</item>
+        <item>2  Stunden</item>
+        <item>3  Stunden</item>
+        <item>6  Stunden</item>
+        <item>12 Stunden</item>
+        <item>1  Tag</item>
+    </string-array>
+	<string name="navigation_games">Spiele</string>
+    <string name="navigation_playerstats">SpielerStatistik</string>
+    <string name="navigation_leagues">Liegen</string>
+    <string name="navigation_messages">Nachrichten</string>
+    
+    <string name="application_icon">Anwendungsicon</string>
+</resources>

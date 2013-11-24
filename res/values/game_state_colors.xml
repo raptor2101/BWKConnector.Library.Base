@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="game_state_aborted">#FF646464</color>
+    <color name="game_state_ended">#FF646464</color>
+    <color name="game_state_lost">#FFC80000</color>
+    <color name="game_state_won">#FF00C800</color>
+    <color name="game_state_running">#FFFFFF</color>
+    <color name="game_state_pending">#FFFFFF</color>
+    <color name="game_state_waiting">#FFFFFF</color>
+    <color name="game_state_unknown">#FFFFFF</color>
+    <color name="game_state_open">#FFFFFF</color>
+</resources>

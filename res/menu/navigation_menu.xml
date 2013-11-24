@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/navigation_playerstats"
+        android:title="@string/navigation_playerstats"
+        android:icon="@drawable/ic_player_info"
+        />
+    <item
+        android:id="@+id/navigation_games"
+        android:title="@string/navigation_games"
+        android:icon="@drawable/ic_games"
+        />
+    <item
+        android:id="@+id/navigation_leagues"
+        android:title="@string/navigation_leagues"
+        android:icon="@drawable/ic_statistics"
+        />
+	<item
+        android:id="@+id/navigation_messages"
+        android:title="@string/navigation_messages"
+        android:icon="@drawable/ic_messages"
+        />	
+</menu>
