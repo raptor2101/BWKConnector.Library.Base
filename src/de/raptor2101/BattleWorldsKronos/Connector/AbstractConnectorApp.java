@@ -1,34 +1,32 @@
 package de.raptor2101.BattleWorldsKronos.Connector;
 
-import java.util.HashSet;
-
+import de.raptor2101.BattleWorldsKronos.Connector.Data.Database;
+import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
 import android.app.Application;
-import android.os.SystemClock;
+import android.net.http.AndroidHttpClient;
 
-import de.raptor2101.BattleWorldsKronos.Connector.JSON.GameInfo;
-import de.raptor2101.BattleWorldsKronos.Connector.JSON.GameListing;
 
 public abstract class AbstractConnectorApp extends Application {
-  private GameListing mStoredResult;
-  private long mTimestampResultStored;
-
-  public HashSet<GameInfo> getLastPendingGames() {
-
-    return mStoredResult == null ? null : mStoredResult.getPendingGames();
+  private Database mDatabase;
+  
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    mDatabase = new Database(this);
+    mDatabase.open();
   }
-
-  public GameListing getResult() {
-    return mStoredResult;
+  
+  @Override
+  public void onTerminate() {
+    super.onTerminate();
+    mDatabase.close();
   }
-
-  public void storeResult(GameListing result) {
-    if(result!=null && result != mStoredResult){
-      mStoredResult = result;
-      mTimestampResultStored = SystemClock.elapsedRealtime();
-    }
+  
+  public Database getDatabase(){
+    return mDatabase;
   }
-
-  public long getTimestampResultStored() {
-    return mTimestampResultStored;
+  
+  public AndroidHttpClient getHttpClient(){
+    return AndroidHttpClient.newInstance(this.getString(R.string.app_name));
   }
 }

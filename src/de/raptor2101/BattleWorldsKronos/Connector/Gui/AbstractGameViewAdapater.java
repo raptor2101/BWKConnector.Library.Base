@@ -3,24 +3,24 @@ package de.raptor2101.BattleWorldsKronos.Connector.Gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.raptor2101.BattleWorldsKronos.Connector.JSON.GameInfo;
+import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public abstract class AbstractGameInfoAdapater extends BaseAdapter {
+public abstract class AbstractGameViewAdapater extends BaseAdapter {
   
-  private List<GameInfo> mGames;
+  private List<Game> mGames;
   private Context mContext;
   
-  protected AbstractGameInfoAdapater(Context context){
-    mGames = new ArrayList<GameInfo>(0);
+  protected AbstractGameViewAdapater(Context context){
+    mGames = new ArrayList<Game>(0);
     mContext =context;
   }
   
-  public void setGameInfos(List<GameInfo> games){
+  public void setGames(List<Game> games){
     mGames = games;
     this.notifyDataSetChanged();
   }
@@ -43,17 +43,17 @@ return mGames.size();
 
   @Override
   public View getView(int position, View currentView, ViewGroup parent) {
-    IGameInfoView view;
+    IGameView view;
     if(currentView != null){
-      view = (IGameInfoView) currentView;
+      view = (IGameView) currentView;
       
     }
     else {
-      view = createGameInfoView(mContext);
+      view = createGameView(mContext);
     }
-    view.setGameInfo(mGames.get(position));
+    view.setGame(mGames.get(position));
     return (View)view;
   }
 
-  protected abstract IGameInfoView createGameInfoView(Context context);
+  protected abstract IGameView createGameView(Context context);
 }

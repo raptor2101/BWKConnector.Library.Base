@@ -4,28 +4,26 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.R.string;
+import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game;
+import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game.State;
+import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Player;
 
 public class ServerConnection {
 
@@ -43,6 +41,45 @@ public class ServerConnection {
   private static final String JSON_IDENTIFIER_RESULT = "result";
   private static final String JSON_IDENTIFIER_USER_ID = "userId";
   private static final String JSON_IDENTIFIER_ID = "id";
+  
+  private class GameObjectIdenifiers{
+    public static final String GAME_ID = "gameId";
+    public static final String MAP_ID = "mapId";
+    public static final String NAME = "name";
+    public static final String OWNER_ID = "ownerId";
+    public static final String CURRENT_ROUND = "currentRound";
+    public static final String NEXT_PLAYER_ID = "nextplayerId";
+    public static final String PLAYERS = "players";
+    public static final String STATE = "state";
+    public static final String CREATED = "created";
+    public static final String UPDATED = "updated";
+    public static final String CURRENT_TURN = "currentTurn";
+  }
+  private class PlayerObjectIdenifiers{
+    public static final String PLAYER_ID = "playerId";
+    public static final String USER_ID = "userId";
+    public static final String TEAM = "team";
+    public static final String NAME = "name";
+    public static final String COLOR = "color";
+    public static final String STATE = "state";
+    public static final String LAST_MESSAGE = "last_message";
+  }
+  public static final HashMap<String, Player.State> PLAYER_STATES = new HashMap<String, Player.State>();
+  public static final HashMap<String, Game.State> GAME_STATES = new HashMap<String, Game.State>();
+    
+  static {
+    PLAYER_STATES.put("playing", Player.State.PLAYING);
+    PLAYER_STATES.put("lost", Player.State.LOST);
+    PLAYER_STATES.put("won", Player.State.WON);
+    PLAYER_STATES.put("aborted", Player.State.ABORTED);
+    PLAYER_STATES.put("unknown", Player.State.UNKNOWN);
+    PLAYER_STATES.put("timeout", Player.State.TIMEOUT);
+    
+    GAME_STATES.put("ended", Game.State.ENDED);
+    GAME_STATES.put("aborted", Game.State.ABORTED);
+    GAME_STATES.put("running", Game.State.RUNNING);
+    GAME_STATES.put("open", Game.State.OPEN);
+  }
 
   private enum JsonMethod {
     // TODO: woher bekomm ich sinnvoll die werte her?
@@ -108,31 +145,106 @@ public class ServerConnection {
     return false;
   }
 
-  public GameListing getGameListing() throws JSONException, ClientProtocolException, IOException, ParseException {
+  public List<Game> getGames() throws JSONException, ClientProtocolException, IOException, ParseException {
     String responseText = performMethod(JsonMethod.GETGAMES);
+    
     JSONObject jsonObject = new JSONObject(responseText);
     jsonObject = jsonObject.getJSONObject(JSON_IDENTIFIER_RESULT);
     
     JSONArray jsonMyGames = jsonObject.getJSONArray("myGames");
     JSONArray jsonOpenGames = jsonObject.getJSONArray("openGames");
     
-    ArrayList<GameInfo> myGames = new ArrayList<GameInfo>(jsonMyGames.length());
-    ArrayList<GameInfo> openGames = new ArrayList<GameInfo>(jsonOpenGames.length());
+    ArrayList<Game> games = new ArrayList<Game>(jsonMyGames.length() + jsonOpenGames.length());
     
     for(int i=0;i<jsonMyGames.length();i++){
-      myGames.add(new GameInfo(jsonMyGames.getJSONObject(i), mUserId));
+      games.add(decodeGameData(jsonMyGames.getJSONObject(i)));
     }
-    Collections.sort(myGames);
-    Collections.reverse(myGames);
     
     for(int i=0;i<jsonOpenGames.length();i++){
-      openGames.add(new GameInfo(jsonOpenGames.getJSONObject(i), mUserId));
+      games.add(decodeGameData(jsonOpenGames.getJSONObject(i)));
     }
     
-    Collections.sort(openGames);
+    
+    return games;
+  }
+
+  private Game decodeGameData(JSONObject jsonObject) throws JSONException, ParseException{
+    String stringState = jsonObject.getString(GameObjectIdenifiers.STATE);
+    String stringCreateDate = jsonObject.getString(GameObjectIdenifiers.CREATED);
+    String stringUpdateDate = jsonObject.getString(GameObjectIdenifiers.UPDATED);
     
     
-    return new GameListing(myGames, openGames);
+    
+    
+    
+    Game game = new Game();
+    game.setGameId(jsonObject.getInt(GameObjectIdenifiers.GAME_ID));
+    game.setMapId(jsonObject.getInt(GameObjectIdenifiers.MAP_ID));
+    game.setGameName(jsonObject.getString(GameObjectIdenifiers.NAME));
+    game.setOwnerId(jsonObject.getInt(GameObjectIdenifiers.OWNER_ID));
+    game.setCurrentRound(jsonObject.getInt(GameObjectIdenifiers.CURRENT_ROUND));
+    game.setCurrentTurn(jsonObject.getInt(GameObjectIdenifiers.CURRENT_TURN));
+    game.setNextPlayerId(jsonObject.getInt(GameObjectIdenifiers.NEXT_PLAYER_ID));
+    game.setCreateDate(ServerConnection.DateFormat.parse(stringCreateDate));
+    game.setUpdateDate(ServerConnection.DateFormat.parse(stringUpdateDate));
+    
+    JSONArray playerArray = jsonObject.getJSONArray(GameObjectIdenifiers.PLAYERS);
+    decodePlayerData(game, playerArray);
+    
+    game.setState(decodeGameState(game, stringState));
+    
+    return game;
+  }
+  private void decodePlayerData(Game game, JSONArray playerArray) throws JSONException{
+    List<Player> players = new ArrayList<Player>(playerArray.length());
+    for (int i = 0; i < playerArray.length(); i++) {
+      JSONObject jsonObject = playerArray.getJSONObject(i);
+      
+      Player player = new Player();
+      player.setPlayerId(jsonObject.getInt(PlayerObjectIdenifiers.PLAYER_ID));
+      player.setUserId(jsonObject.getInt(PlayerObjectIdenifiers.USER_ID));
+      player.setPlayerName(jsonObject.getString(PlayerObjectIdenifiers.NAME));
+      player.setTeam(jsonObject.getInt(PlayerObjectIdenifiers.TEAM));
+      player.setColor(jsonObject.getString(PlayerObjectIdenifiers.COLOR));
+      player.setLastMessage(jsonObject.getString(PlayerObjectIdenifiers.LAST_MESSAGE));
+      
+      String state = jsonObject.getString(PlayerObjectIdenifiers.STATE);
+      player.setState(PLAYER_STATES.get(state));
+      
+      //if (player.getUserId() == userId) {
+      //  playerInfoAssignedToUser = playerInfo;
+      //}
+      
+      if (player.getState() == Player.State.WON) {
+        game.setWinner(player);
+      }
+      
+      players.add(player);
+    }
+    game.setPlayers(players);
+  }
+  
+  private Game.State decodeGameState(Game game, String stateString) {
+    Game.State state = GAME_STATES.get(stateString);
+
+    if (state == Game.State.ENDED) {
+      Player winner = game.getWinner();
+      if (winner != null) {
+        if (winner.getUserId() == mUserId) {
+          state = Game.State.WON;
+        } else {
+          state = Game.State.LOST;
+        }
+      }
+    } else if (state == State.RUNNING) {
+      if (game.getNextPlayerId() == mUserId) {
+        state = Game.State.PENDING;
+      } else {
+        state = Game.State.WAITING;
+      }
+    }
+    
+    return state;
   }
 
   private String performMethod(JsonMethod jsonMethod,Object... params) throws JSONException, IOException, ClientProtocolException {

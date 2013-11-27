@@ -1,12 +1,5 @@
 package de.raptor2101.BattleWorldsKronos.Connector;
 
-import java.util.HashSet;
-
-import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
-import de.raptor2101.BattleWorldsKronos.Connector.JSON.GameInfo;
-import de.raptor2101.BattleWorldsKronos.Connector.JSON.GameListing;
-import de.raptor2101.BattleWorldsKronos.Connector.Task.GameListingLoaderTask;
-import de.raptor2101.BattleWorldsKronos.Connector.Task.GameListingLoaderTask.ResultListener;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -16,12 +9,15 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.http.AndroidHttpClient;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
+import de.raptor2101.BattleWorldsKronos.Connector.Task.GamesLoaderTask;
+import de.raptor2101.BattleWorldsKronos.Connector.Task.GamesLoaderTask.Result;
+import de.raptor2101.BattleWorldsKronos.Connector.Task.GamesLoaderTask.ResultListener;
 
 public class NotificationService extends Service implements ResultListener {
   private static final String ServiceTag = "BWK:Connector-Service";
@@ -30,7 +26,7 @@ public class NotificationService extends Service implements ResultListener {
   private static Class<? extends Activity> GameListingActivity;
   private static Class<? extends Activity> ShowMessageActivity;
   private WakeLock mWakeLock;
-  private GameListingLoaderTask task;
+  private GamesLoaderTask task;
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -54,18 +50,15 @@ public class NotificationService extends Service implements ResultListener {
   }
 
   @Override
-  public void handleResult(GameListing result) {
+  public void handleResult(Result result) {
     if (result == null) {
       return;
     }
 
-    HashSet<GameInfo> currentPendingGames = result.getPendingGames();
-    HashSet<GameInfo> lastPendingGames = ((AbstractConnectorApp) getApplication()).getLastPendingGames();
-    if (currentPendingGames.size() > 0 && (lastPendingGames == null ||  !lastPendingGames.containsAll(currentPendingGames))) {
-      generatePendingGamesNotification(currentPendingGames.size());
-    }
     
-    ((AbstractConnectorApp)getApplication()).storeResult(result);
+    if (result.getUnnotifiedPendingGames() > 0) {
+      generatePendingGamesNotification(result.getPendingGames());
+    }
   }
 
   private void handleIntent(Intent intent) {
@@ -81,8 +74,8 @@ public class NotificationService extends Service implements ResultListener {
       return;
     }
   
-    task = new GameListingLoaderTask(AndroidHttpClient.newInstance("BWK:Connector"), settings.getEmail(), settings.getPassword(), this);
-    task.execute(new Void[0]);
+    task = new GamesLoaderTask(this, settings.getEmail(), settings.getPassword(), this);
+    task.execute(new Boolean[]{true});
   }
 
   private void generatePendingGamesNotification(int pendingGames) {
