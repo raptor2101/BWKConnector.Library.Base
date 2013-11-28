@@ -5,7 +5,7 @@
     <color name="game_state_lost">#FFC80000</color>
     <color name="game_state_won">#FF00C800</color>
     <color name="game_state_running">#FFFFFF</color>
-    <color name="game_state_pending">#FFFFFF</color>
+    <color name="game_state_pending">#FFFF00</color>
     <color name="game_state_waiting">#FFFFFF</color>
     <color name="game_state_unknown">#FFFFFF</color>
     <color name="game_state_open">#FFFFFF</color>

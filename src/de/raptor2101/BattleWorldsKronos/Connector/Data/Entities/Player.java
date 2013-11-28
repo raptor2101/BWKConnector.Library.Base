@@ -1,18 +1,21 @@
 package de.raptor2101.BattleWorldsKronos.Connector.Data.Entities;
 
 import android.content.Context;
+import android.graphics.AvoidXfermode;
 import android.util.SparseArray;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
 
 public class Player {
   
   public enum State {
-    PLAYING(0, R.string.player_info_state_playing, R.color.player_state_playing),
-    LOST(1, R.string.player_info_state_lost, R.color.player_state_lost),
-    WON(2, R.string.player_info_state_won, R.color.player_state_won),
-    ABORTED(3, R.string.player_info_state_aborted, R.color.player_state_aborted),
-    UNKNOWN(4, R.string.player_info_state_unknown, R.color.player_state_unknown),
-    TIMEOUT(5, R.string.player_info_state_timeout, R.color.player_state_timeout);
+    PLAYING(0, R.string.player_state_playing, R.color.player_state_playing),
+    LOST(1, R.string.player_state_lost, R.color.player_state_lost),
+    WON(2, R.string.player_state_won, R.color.player_state_won),
+    ABORTED(3, R.string.player_state_aborted, R.color.player_state_aborted),
+    UNKNOWN(4, R.string.player_state_unknown, R.color.player_state_unknown),
+    TIMEOUT(5, R.string.player_state_timeout, R.color.player_state_timeout),
+    ACTIVE(6, R.string.player_state_active, R.color.player_state_active),
+    WAITING(7, R.string.player_state_waiting, R.color.player_state_waiting),;
 
     private static final SparseArray<State> intToState = new SparseArray<State>();
     
@@ -22,6 +25,8 @@ public class Player {
       intToState.put(WON.getValue(), WON);
       intToState.put(TIMEOUT.getValue(), TIMEOUT);
       intToState.put(ABORTED.getValue(), ABORTED);
+      intToState.put(ACTIVE.getValue(), ACTIVE);
+      intToState.put(WAITING.getValue(), WAITING);
       intToState.put(UNKNOWN.getValue(), UNKNOWN);
     }
     

@@ -22,7 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game;
-import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game.State;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Player;
 
 public class ServerConnection {
@@ -193,6 +192,8 @@ public class ServerConnection {
   }
   private void decodePlayerData(Game game, JSONArray playerArray) throws JSONException{
     List<Player> players = new ArrayList<Player>(playerArray.length());
+    Player winner = null, activePlayer = null;
+    int activePlayerId = game.getActivePlayerId(); 
     for (int i = 0; i < playerArray.length(); i++) {
       JSONObject jsonObject = playerArray.getJSONObject(i);
       
@@ -210,20 +211,29 @@ public class ServerConnection {
       player.setColor(jsonObject.getString(PlayerObjectIdenifiers.COLOR));
       player.setLastMessage(jsonObject.getString(PlayerObjectIdenifiers.LAST_MESSAGE));
       
-      String state = jsonObject.getString(PlayerObjectIdenifiers.STATE);
-      player.setState(PLAYER_STATES.get(state));
-      
-      //if (player.getUserId() == userId) {
-      //  playerInfoAssignedToUser = playerInfo;
-      //}
-      
-      if (player.getState() == Player.State.WON) {
-        game.setWinner(player);
+      String stateString = jsonObject.getString(PlayerObjectIdenifiers.STATE);
+      Player.State state = PLAYER_STATES.get(stateString);
+            
+      if (state == Player.State.WON) {
+        winner = player;
       }
       
+      if(player.getPlayerId() == activePlayerId) {
+        activePlayer = player;
+        if(state == Player.State.PLAYING){
+          state = Player.State.ACTIVE;
+        }
+      } else {
+        if(state == Player.State.PLAYING){
+          state = Player.State.WAITING;
+        }
+      }
+        
+      
+      player.setState(state);
       players.add(player);
     }
-    game.setPlayers(players);
+    game.setPlayers(players, winner, activePlayer);
   }
   
   private Game.State decodeGameState(Game game, String stateString) {
@@ -239,9 +249,9 @@ public class ServerConnection {
           state = Game.State.LOST;
         }
       }
-    } else if (state == State.RUNNING) {
-      Player nextPlayer = game.getNextPlayer();
-      if (nextPlayer!= null && nextPlayer.getUserId() == mUserId) {
+    } else if (state == Game.State.RUNNING) {
+      Player activePlayer = game.getActivePlayer();
+      if (activePlayer!= null && activePlayer.getUserId() == mUserId) {
         state = Game.State.PENDING;
       } else {
         state = Game.State.WAITING;

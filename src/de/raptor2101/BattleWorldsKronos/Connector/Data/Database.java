@@ -57,7 +57,20 @@ public class Database {
       }
     }
     
-    mDatabase.delete(DbHelper.TableGames.Name, String.format(DbHelper.LESS_THAN, DbHelper.TableGames.Columns.PERSISTED), new String[]{String.valueOf(persistTimestamp)});
+    deleteOldGames(persistTimestamp);
+  }
+
+  private void deleteOldGames(long persistTimestamp) {
+    Cursor cursor = mDatabase.query(DbHelper.TableGames.Name, new String[]{DbHelper.TableGames.Columns.GAME_ID}, String.format(DbHelper.LESS_THAN, DbHelper.TableGames.Columns.PERSISTED), new String[]{String.valueOf(persistTimestamp)}, null, null, null);
+    cursor.moveToFirst();
+    while(!cursor.isAfterLast()){
+      int gameId = cursor.getInt(0);
+      
+      mDatabase.delete(DbHelper.TablePlayers.Name, String.format(DbHelper.EQUALS,DbHelper.TablePlayers.Columns.GAME_ID), new String[]{String.valueOf(gameId)});
+      mDatabase.delete(DbHelper.TableGames.Name, String.format(DbHelper.EQUALS,DbHelper.TableGames.Columns.GAME_ID), new String[]{String.valueOf(gameId)});
+      cursor.moveToNext();
+    }
+    cursor.close();
   }
 
   private void insertPlayer(ContentValues contentValues) {
@@ -85,7 +98,7 @@ public class Database {
     contentValues.put(DbHelper.TableGames.Columns.OWNER_ID, game.getOwnerId());
     contentValues.put(DbHelper.TableGames.Columns.CURRENT_TURN, game.getCurrentTurn());
     contentValues.put(DbHelper.TableGames.Columns.CURRENT_ROUND, game.getCurrentRound());
-    contentValues.put(DbHelper.TableGames.Columns.NEXT_PLAYER_ID, game.getNextPlayerId());
+    contentValues.put(DbHelper.TableGames.Columns.NEXT_PLAYER_ID, game.getActivePlayerId());
     contentValues.put(DbHelper.TableGames.Columns.STATE, game.getState().getValue());
     contentValues.put(DbHelper.TableGames.Columns.CREATED, DATE_FORMAT.format(game.getCreateDate()));
     contentValues.put(DbHelper.TableGames.Columns.UPDATED, DATE_FORMAT.format(game.getUpdateDate()));
@@ -113,7 +126,7 @@ public class Database {
       return 0;
     }
 
-    if (updateTimestamp.after(savedUpdateTimestamp)) {
+    if (!updateTimestamp.after(savedUpdateTimestamp)) {
       return 1;
     }
 
@@ -216,7 +229,9 @@ public class Database {
   private void loadPlayers(Game game) {
     Cursor cursor = mDatabase.query(DbHelper.TablePlayers.Name, DbHelper.TablePlayers.ALL_COLUMNS, String.format(DbHelper.EQUALS,DbHelper.TablePlayers.Columns.GAME_ID), new String[]{String.valueOf(game.getGameId())}, null, null, DbHelper.TablePlayers.Columns.PLAYER_ID);
     List<Player> players = new ArrayList<Player>(cursor.getCount());
+    Player activePlayer = null, winner = null;
     
+    int activePlayerId = game.getActivePlayerId();
     cursor.moveToFirst();
     while(!cursor.isAfterLast()){
       Player player = new Player();
@@ -228,11 +243,19 @@ public class Database {
       player.setState(Player.State.FromInt(cursor.getInt(6)));
       player.setLastMessage(cursor.getString(7));
       
+      if(player.getState() == Player.State.WON){
+        winner = player;
+      }
+      
+      if(player.getPlayerId() == activePlayerId){
+        activePlayer = player;
+      }
+      
       players.add(player);
       cursor.moveToNext();
     }
     cursor.close();
     
-    game.setPlayers(players);
+    game.setPlayers(players, winner, activePlayer);
   }
 }

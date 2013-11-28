@@ -24,23 +24,25 @@
     <string name="setting_button_discard">Verwerfen</string>
     <string name="setting_label_LoginInformation">Account-Informationen</string>
     
-    <string name="game_info_state_running">Laufend</string>
-    <string name="game_info_state_ended">Beendet</string>
-    <string name="game_info_state_lost">Verloren</string>
-    <string name="game_info_state_won">Gewonnen</string>
-    <string name="game_info_state_pending">Am Zug</string>
-    <string name="game_info_state_waiting">Wartend</string>
-    <string name="game_info_state_open">Offen</string>
-    <string name="game_info_state_aborted">Abgebrochen</string>
-    <string name="game_info_state_unknown">Unbekannt</string>
+    <string name="game_state_running">Laufend</string>
+    <string name="game_state_ended">Beendet</string>
+    <string name="game_state_lost">Verloren</string>
+    <string name="game_state_won">Gewonnen</string>
+    <string name="game_state_pending">Am Zug</string>
+    <string name="game_state_waiting">Wartend</string>
+    <string name="game_state_open">Offen</string>
+    <string name="game_state_aborted">Abgebrochen</string>
+    <string name="game_state_unknown">Unbekannt</string>
     
     
-    <string name="player_info_state_aborted">Abgebrochen</string>
-    <string name="player_info_state_playing">Spielend</string>
-    <string name="player_info_state_lost">Verloren</string>
-    <string name="player_info_state_won">Gewonnen</string>
-    <string name="player_info_state_timeout">Timeout</string>
-    <string name="player_info_state_unknown">Unbekannt</string>
+    <string name="player_state_aborted">Abgebrochen</string>
+    <string name="player_state_playing">Spielend</string>
+    <string name="player_state_lost">Verloren</string>
+    <string name="player_state_won">Gewonnen</string>
+    <string name="player_state_timeout">Timeout</string>
+    <string name="player_state_active">Aktive</string>
+    <string name="player_state_waiting">Wartet</string>
+    <string name="player_state_unknown">Unbekannt</string>
     
     <string name="message_games_pending">%d Spiele warten auf deinen Zug.</string>
     <string name="date_format_string">"dd.MM.yyyy HH:mm"</string>

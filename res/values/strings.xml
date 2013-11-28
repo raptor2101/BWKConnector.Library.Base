@@ -23,23 +23,25 @@
     <string name="setting_button_discard">Discard</string>
     <string name="setting_label_LoginInformation">Login</string>
     
-    <string name="game_info_state_running">Running</string>
-    <string name="game_info_state_ended">Ended</string>
-    <string name="game_info_state_lost">Lost</string>
-    <string name="game_info_state_won">Won</string>
-    <string name="game_info_state_pending">Pending</string>
-    <string name="game_info_state_waiting">Waiting</string>
-    <string name="game_info_state_open">Open</string>
-    <string name="game_info_state_aborted">Aborted</string>
-    <string name="game_info_state_unknown">Unknown</string>
+    <string name="game_state_running">Running</string>
+    <string name="game_state_ended">Ended</string>
+    <string name="game_state_lost">Lost</string>
+    <string name="game_state_won">Won</string>
+    <string name="game_state_pending">Pending</string>
+    <string name="game_state_waiting">Waiting</string>
+    <string name="game_state_open">Open</string>
+    <string name="game_state_aborted">Aborted</string>
+    <string name="game_state_unknown">Unknown</string>
     
     
-    <string name="player_info_state_aborted">Aborted</string>
-    <string name="player_info_state_playing">Playing</string>
-    <string name="player_info_state_lost">Lost</string>
-    <string name="player_info_state_won">Won</string>
-    <string name="player_info_state_timeout">Timeout</string>
-    <string name="player_info_state_unknown">Unknown</string>
+    <string name="player_state_aborted">Aborted</string>
+    <string name="player_state_playing">Playing</string>
+    <string name="player_state_lost">Lost</string>
+    <string name="player_state_won">Won</string>
+    <string name="player_state_timeout">Timeout</string>
+    <string name="player_state_active">Active</string>
+    <string name="player_state_waiting">Waiting</string>
+    <string name="player_state_unknown">Unknown</string>
     
     <string name="message_games_pending">There are %d games waiting for your interaction</string>
     <string name="date_format_string">"yyyy.MM.dd HH:mm"</string>

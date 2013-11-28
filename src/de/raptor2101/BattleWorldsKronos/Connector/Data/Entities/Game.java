@@ -10,15 +10,15 @@ import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
 public class Game {
   
   public enum State {
-    RUNNING(0, R.string.game_info_state_running, R.color.game_state_running), 
-    ENDED(1, R.string.game_info_state_ended, R.color.game_state_ended), 
-    LOST(2, R.string.game_info_state_lost, R.color.game_state_lost), 
-    WON(3, R.string.game_info_state_won, R.color.game_state_won), 
-    PENDING(4, R.string.game_info_state_pending, R.color.game_state_pending), 
-    WAITING(5, R.string.game_info_state_waiting, R.color.game_state_waiting), 
-    OPEN(6, R.string.game_info_state_open, R.color.game_state_open), 
-    ABORTED(7, R.string.game_info_state_aborted, R.color.game_state_aborted), 
-    UNKNOWN(8, R.string.game_info_state_unknown, R.color.game_state_unknown);
+    RUNNING(0, R.string.game_state_running, R.color.game_state_running), 
+    ENDED(1, R.string.game_state_ended, R.color.game_state_ended), 
+    LOST(2, R.string.game_state_lost, R.color.game_state_lost), 
+    WON(3, R.string.game_state_won, R.color.game_state_won), 
+    PENDING(4, R.string.game_state_pending, R.color.game_state_pending), 
+    WAITING(5, R.string.game_state_waiting, R.color.game_state_waiting), 
+    OPEN(6, R.string.game_state_open, R.color.game_state_open), 
+    ABORTED(7, R.string.game_state_aborted, R.color.game_state_aborted), 
+    UNKNOWN(8, R.string.game_state_unknown, R.color.game_state_unknown);
 
     private static final SparseArray<State> intToState = new SparseArray<State>();
     
@@ -77,13 +77,13 @@ public class Game {
   private int mGameId;
   private String mGameName;
   private int mMapId;
-  private int mNextPlayerId;
+  private int mActivePlayerId;
   private int mOwnerId;
   private State mState;
   private Date mUpdateDate;
   private List<Player> mPlayers;
   private Player mWinner;
-  private Player mNextPlayer;
+  private Player mActivePlayer;
   
   public Player getWinner() {
     return mWinner;
@@ -117,8 +117,8 @@ public class Game {
     return mMapId;
   }
 
-  public int getNextPlayerId() {
-    return mNextPlayerId;
+  public int getActivePlayerId() {
+    return mActivePlayerId;
   }
 
   public int getOwnerId() {
@@ -162,16 +162,17 @@ public class Game {
   }
 
   public void setNextPlayerId(int nextPlayerId) {
-    this.mNextPlayer = null;
-    this.mNextPlayerId = nextPlayerId;
+    this.mActivePlayer = null;
+    this.mActivePlayerId = nextPlayerId;
   }
 
   public void setOwnerId(int mOwnerId) {
     this.mOwnerId = mOwnerId;
   }
 
-  public void setPlayers(List<Player> players) {
-    this.mNextPlayer = null;
+  public void setPlayers(List<Player> players, Player winner, Player nextPlayer) {
+    this.mActivePlayer = nextPlayer;
+    this.mWinner = winner;
     this.mPlayers = players;
   }
 
@@ -183,16 +184,16 @@ public class Game {
     this.mUpdateDate = updateDate;
   }
 
-  public Player getNextPlayer() {
-    if(mNextPlayer == null && mPlayers != null){
+  public Player getActivePlayer() {
+    if(mActivePlayer == null && mPlayers != null){
       for(Player player:mPlayers){
-        if(mNextPlayerId == player.getPlayerId()){
-          mNextPlayer = player;
+        if(mActivePlayerId == player.getPlayerId()){
+          mActivePlayer = player;
           break;
         }
       }
     }
     
-    return mNextPlayer;
+    return mActivePlayer;
   }
 }
