@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="195dp"
-    android:layout_height="195dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
     android:background="@drawable/border"
     android:orientation="vertical"
@@ -30,7 +30,7 @@
 
         <TextView
             android:id="@+id/text_game_info_view_State"
-            android:layout_width="wrap_content"
+            android:layout_width="70sp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_marginLeft="3dp"
@@ -60,13 +60,11 @@
             android:layout_marginRight="3dp"
             android:gravity="right"
             android:textStyle="normal" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="2dp" >
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -86,11 +84,13 @@
             android:textStyle="normal" />
     </LinearLayout>
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/layout_game_info_view_PlayerBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="2dp" >
+        android:padding="2dp" 
+        android:background="@drawable/border"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"

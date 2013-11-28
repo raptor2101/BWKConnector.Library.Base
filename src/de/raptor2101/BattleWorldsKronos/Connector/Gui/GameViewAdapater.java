@@ -4,18 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game;
+import de.raptor2101.BattleWorldsKronos.Connector.Gui.Controls.GameView;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public abstract class AbstractGameViewAdapater extends BaseAdapter {
+public class GameViewAdapater extends BaseAdapter {
   
   private List<Game> mGames;
   private Context mContext;
   
-  protected AbstractGameViewAdapater(Context context){
+  public GameViewAdapater(Context context){
     mGames = new ArrayList<Game>(0);
     mContext =context;
   }
@@ -43,17 +44,15 @@ return mGames.size();
 
   @Override
   public View getView(int position, View currentView, ViewGroup parent) {
-    IGameView view;
+    GameView view;
     if(currentView != null){
-      view = (IGameView) currentView;
+      view = (GameView) currentView;
       
     }
     else {
-      view = createGameView(mContext);
+      view = new GameView(mContext);
     }
     view.setGame(mGames.get(position));
     return (View)view;
   }
-
-  protected abstract IGameView createGameView(Context context);
 }

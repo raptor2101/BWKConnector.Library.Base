@@ -1,25 +1,29 @@
 package de.raptor2101.BattleWorldsKronos.Connector.Gui.Activities;
 
-import java.util.List;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.ListAdapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ProgressBar;
 import de.raptor2101.BattleWorldsKronos.Connector.AbstractConnectorApp;
 import de.raptor2101.BattleWorldsKronos.Connector.ApplicationSettings;
 import de.raptor2101.BattleWorldsKronos.Connector.NotificationService;
-import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game;
+import de.raptor2101.BattleWorldsKronos.Connector.Gui.GameViewAdapater;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.NavigationButtonAdapter;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
+import de.raptor2101.BattleWorldsKronos.Connector.Gui.Controls.GameView;
 import de.raptor2101.BattleWorldsKronos.Connector.Task.GamesLoaderTask;
 
-public abstract class AbstractGameListingActivity extends Activity implements GamesLoaderTask.ResultListener {
-  
+public abstract class AbstractGameListingActivity extends Activity implements GamesLoaderTask.ResultListener, OnItemClickListener {
+  public final static String TAG_EXPENDABLE = "expendable";
+  GameViewAdapater mGameViewAdapater = new GameViewAdapater(this);
+  GameView mExpandedView;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -31,8 +35,17 @@ public abstract class AbstractGameListingActivity extends Activity implements Ga
     AbsListView listView = (AbsListView) findViewById(R.id.navigation_menu);
     listView.setAdapter(adapter);
     
+    
+    
     listView = (AbsListView) findViewById(R.id.game_listing);
-    listView.setAdapter(getGamesAdapter());
+    listView.setAdapter(mGameViewAdapater);
+    if(TAG_EXPENDABLE.equals(listView.getTag())){
+      listView.setOnItemClickListener(this);
+      listView.setClickable(true);
+    } else {
+      listView.setClickable(false);
+    }
+    
   }
   
 
@@ -63,7 +76,12 @@ public abstract class AbstractGameListingActivity extends Activity implements Ga
     
   }
 
-  
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.menu, menu);
+    return true;
+  }
 
   @Override
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -80,13 +98,30 @@ public abstract class AbstractGameListingActivity extends Activity implements Ga
     ProgressBar progressBar = GetProgressBar();
     progressBar.setVisibility(View.GONE);
     if(result != null){
-      setGames(result.getGames());
+      mGameViewAdapater.setGames(result.getGames());
       NotificationService.reset(this);
     }
   }
   
-  protected abstract void startSettingsActivity();
-  protected abstract void setGames(List<Game> myGames);
-  protected abstract ListAdapter getGamesAdapter();
+  private void startSettingsActivity() {
+    Intent intent = new Intent(this, SettingsActivity.class);
+    startActivity(intent);
+  }
+  
+  @Override
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    GameView gameView = (GameView) view;
+    if(gameView.isExpanded()){
+      gameView.collapse();
+      mExpandedView = null;
+    } else{
+      if(mExpandedView != null){
+        mExpandedView.collapse();
+      }
+      gameView.expand();
+      mExpandedView = gameView;
+    }
+  }
+  
   protected abstract ProgressBar GetProgressBar();
 }
