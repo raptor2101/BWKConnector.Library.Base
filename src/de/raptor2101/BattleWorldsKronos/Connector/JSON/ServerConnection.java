@@ -173,10 +173,6 @@ public class ServerConnection {
     String stringCreateDate = jsonObject.getString(GameObjectIdenifiers.CREATED);
     String stringUpdateDate = jsonObject.getString(GameObjectIdenifiers.UPDATED);
     
-    
-    
-    
-    
     Game game = new Game();
     game.setGameId(jsonObject.getInt(GameObjectIdenifiers.GAME_ID));
     game.setMapId(jsonObject.getInt(GameObjectIdenifiers.MAP_ID));
@@ -202,7 +198,13 @@ public class ServerConnection {
       
       Player player = new Player();
       player.setPlayerId(jsonObject.getInt(PlayerObjectIdenifiers.PLAYER_ID));
-      player.setUserId(jsonObject.getInt(PlayerObjectIdenifiers.USER_ID));
+      int userId = jsonObject.getInt(PlayerObjectIdenifiers.USER_ID);
+      
+      if(userId == 0){
+        continue;
+      }
+          
+      player.setUserId(userId);
       player.setPlayerName(jsonObject.getString(PlayerObjectIdenifiers.NAME));
       player.setTeam(jsonObject.getInt(PlayerObjectIdenifiers.TEAM));
       player.setColor(jsonObject.getString(PlayerObjectIdenifiers.COLOR));
@@ -229,6 +231,7 @@ public class ServerConnection {
 
     if (state == Game.State.ENDED) {
       Player winner = game.getWinner();
+      
       if (winner != null) {
         if (winner.getUserId() == mUserId) {
           state = Game.State.WON;
@@ -237,7 +240,8 @@ public class ServerConnection {
         }
       }
     } else if (state == State.RUNNING) {
-      if (game.getNextPlayerId() == mUserId) {
+      Player nextPlayer = game.getNextPlayer();
+      if (nextPlayer!= null && nextPlayer.getUserId() == mUserId) {
         state = Game.State.PENDING;
       } else {
         state = Game.State.WAITING;
