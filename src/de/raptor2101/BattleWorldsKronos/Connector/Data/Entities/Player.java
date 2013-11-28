@@ -1,7 +1,6 @@
 package de.raptor2101.BattleWorldsKronos.Connector.Data.Entities;
 
 import android.content.Context;
-import android.graphics.AvoidXfermode;
 import android.util.SparseArray;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
 
