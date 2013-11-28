@@ -127,7 +127,9 @@ public class Database {
     }
 
     if (!updateTimestamp.after(savedUpdateTimestamp)) {
-      return 1;
+      long persistTimestamp = contentValues.getAsLong(DbHelper.TableGames.Columns.PERSISTED);
+      contentValues = new ContentValues(1);
+      contentValues.put(DbHelper.TableGames.Columns.PERSISTED, persistTimestamp);
     }
 
     String whereCondition = String.format(DbHelper.EQUALS, DbHelper.TableGames.Columns.GAME_ID);
