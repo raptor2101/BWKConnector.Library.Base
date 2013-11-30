@@ -1,4 +1,4 @@
-package de.raptor2101.BattleWorldsKronos.Connector.Gui;
+package de.raptor2101.BattleWorldsKronos.Connector.Gui.Adapters;
 
 import java.io.IOException;
 import java.util.ArrayList;
