@@ -11,12 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public class GameViewAdapater extends BaseAdapter {
+public class GameViewAdapter extends BaseAdapter {
   
   private List<Game> mGames;
   private Context mContext;
   
-  public GameViewAdapater(Context context){
+  public GameViewAdapter(Context context){
     mGames = new ArrayList<Game>(0);
     mContext =context;
   }

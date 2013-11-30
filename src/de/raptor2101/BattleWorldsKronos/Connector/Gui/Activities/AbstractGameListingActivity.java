@@ -15,7 +15,7 @@ import de.raptor2101.BattleWorldsKronos.Connector.AbstractConnectorApp;
 import de.raptor2101.BattleWorldsKronos.Connector.ApplicationSettings;
 import de.raptor2101.BattleWorldsKronos.Connector.NotificationService;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
-import de.raptor2101.BattleWorldsKronos.Connector.Gui.Adapters.GameViewAdapater;
+import de.raptor2101.BattleWorldsKronos.Connector.Gui.Adapters.GameViewAdapter;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.Adapters.NavigationButtonAdapter;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.Views.GameView;
 import de.raptor2101.BattleWorldsKronos.Connector.Task.GamesLoaderTask;
@@ -23,7 +23,7 @@ import de.raptor2101.BattleWorldsKronos.Connector.Task.LoaderTask.ResultListener
 
 public abstract class AbstractGameListingActivity extends Activity implements ResultListener<GamesLoaderTask.Result>, OnItemClickListener {
   public final static String TAG_EXPENDABLE = "expendable";
-  GameViewAdapater mGameViewAdapater = new GameViewAdapater(this);
+  GameViewAdapter mGameViewAdapater = new GameViewAdapter(this);
   GameView mExpandedView;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
