@@ -12,7 +12,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.SystemClock;
+import de.raptor2101.BattleWorldsKronos.Connector.Data.DbHelper.TableMessage.Columns;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game;
+import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Message;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Player;
 
 public class Database {
@@ -31,6 +33,79 @@ public class Database {
   public void close() {
     mDbHelper.close();
     mDatabase = null;
+  }
+
+  public void persistMessage(List<Message> messages){
+    long persistTimestamp = SystemClock.elapsedRealtime();
+    
+    for(Message message:messages){
+      int messageId = message.getMessageId();
+      ContentValues contentValues = buildContentValues(message, persistTimestamp);
+      
+      String whereCondition = String.format(DbHelper.EQUALS, DbHelper.TableMessage.Columns.MESSAGE_ID);
+      String[] arguments = new String[] { String.valueOf(messageId) };
+      int updatedRows = mDatabase.update(DbHelper.TableMessage.Name, contentValues, whereCondition, arguments);
+      
+      if(updatedRows == 0) {
+        contentValues.put(DbHelper.TableMessage.Columns.NOTIFIED, 0);
+        mDatabase.insert(DbHelper.TableMessage.Name, null, contentValues);
+      }
+    }
+    
+    deleteOldMessages(persistTimestamp);
+  }
+  
+  private void deleteOldMessages(long persistTimestamp) {
+    mDatabase.execSQL(DbHelper.TableMessage.SqlCommands.DELETE_OLD_MESSAGES, new String[]{String.valueOf(persistTimestamp)});
+  }
+  
+  public List<Message> getMessages(){
+    Cursor cursor = mDatabase.query(DbHelper.TableMessage.Name, DbHelper.TableMessage.ALL_COLUMNS, DbHelper.TableMessage.SqlCommands.WHERE_MESSAGES_TO_READ, null, null, null, DbHelper.TableMessage.Columns.MESSAGE_ID);
+    
+    ArrayList<Message> messages = new ArrayList<Message>(cursor.getCount());
+    
+    cursor.moveToFirst();
+    while(!cursor.isAfterLast()){
+      try {
+        Message message = new Message();
+        
+        message.setMessageId(cursor.getInt(0));
+        message.setAuthorId(cursor.getInt(1));
+        message.setAuthorName(cursor.getString(2));
+        message.setTimestamp(DATE_FORMAT.parse(cursor.getString(3)));
+        message.setMessage(cursor.getString(4));
+        message.setLastMessageId(cursor.getInt(5));
+        message.setIsSystemMessage(cursor.getInt(6)==1);
+        message.setIsReaded(cursor.getInt(7)==1);
+        message.setIsDiscarded(cursor.getInt(8)==1);
+        message.setIsDeleted(cursor.getInt(9)==1);
+        
+        messages.add(message);
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+      cursor.moveToNext();
+    }
+    cursor.close();
+    
+    return messages;
+  }
+
+  private ContentValues buildContentValues(Message message, long persistTimestamp) {
+    ContentValues contentValues = new ContentValues(DbHelper.TableMessage.ALL_COLUMNS.length);
+    contentValues.put(DbHelper.TableMessage.Columns.MESSAGE_ID, message.getMessageId());
+    contentValues.put(DbHelper.TableMessage.Columns.AUTHOR_ID, message.getAuthorId());
+    contentValues.put(DbHelper.TableMessage.Columns.AUTHOR_NAME, message.getAuthorName());
+    contentValues.put(DbHelper.TableMessage.Columns.TIMESTAMP, DATE_FORMAT.format(message.getTimestamp()));
+    contentValues.put(DbHelper.TableMessage.Columns.MESSAGE, message.getMessage());
+    contentValues.put(DbHelper.TableMessage.Columns.LAST_MESSAGE_ID, message.getLastMessageId());
+    contentValues.put(DbHelper.TableMessage.Columns.IS_SYSTEM_MESSAGE, message.isSystemMessage());
+    contentValues.put(DbHelper.TableMessage.Columns.IS_READ, message.isReaded());
+    contentValues.put(DbHelper.TableMessage.Columns.IS_DISCARDED, message.isDiscarded());
+    contentValues.put(DbHelper.TableMessage.Columns.IS_DELETED, message.isDeleted());
+    contentValues.put(DbHelper.TableMessage.Columns.PERSISTED, persistTimestamp);
+    
+    return contentValues;
   }
 
   public void persistGames(List<Game> games) {

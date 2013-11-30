@@ -85,8 +85,51 @@ class DbHelper extends SQLiteOpenHelper {
     }
   }
   
+  static class TableMessage{
+    public static final String Name = "messages";
+    public static final String[] ALL_COLUMNS = new String[]{Columns.MESSAGE_ID, Columns.AUTHOR_ID, Columns.AUTHOR_NAME, Columns.TIMESTAMP, Columns.MESSAGE, Columns.LAST_MESSAGE_ID, Columns.IS_SYSTEM_MESSAGE, Columns.IS_READ, Columns.IS_DISCARDED, Columns.IS_DELETED, Columns.PERSISTED, Columns.NOTIFIED};
+    
+    static class Columns {
+      public static final String MESSAGE_ID = "message_id";
+      public static final String AUTHOR_ID = "author_id";
+      public static final String AUTHOR_NAME = "author_name";
+      public static final String TIMESTAMP = "timestamp";
+      public static final String MESSAGE = "message";
+      public static final String LAST_MESSAGE_ID = "last_message_id";
+      
+      public static final String IS_SYSTEM_MESSAGE = "is_system_message";
+      public static final String IS_READ = "is_read";
+      public static final String IS_DISCARDED = "is_discarded";
+      public static final String IS_DELETED = "is_deleted";
+      
+      public static final String PERSISTED = "persisted";
+      public static final String NOTIFIED = "notified";
+    }
+    
+    static class SqlCommands {
+      public static final String CREATE_TABLE = String.format("CREATE TABLE %s (" +
+          "%s INTEGER       NOT NULL PRIMARY KEY," + 
+          "%s INTEGER       NOT NULL," + 
+          "%s VARCHAR(250)  NOT NULL," + 
+          "%s DATETIME      NOT NULL," + 
+          "%s TEXT          NOT NULL," +
+          "%s INTEGER       NOT NULL," + 
+          "%s INTEGER       NOT NULL," +
+          "%s INTEGER       NOT NULL," +
+          "%s INTEGER       NOT NULL," +
+          "%s INTEGER       NOT NULL," +
+          "%s INTEGER       NOT NULL," + 
+          "%s INTEGER       NOT NULL" + 
+          ")",
+        Name, Columns.MESSAGE_ID, Columns.AUTHOR_ID, Columns.AUTHOR_NAME, Columns.TIMESTAMP, Columns.MESSAGE, Columns.LAST_MESSAGE_ID, Columns.IS_SYSTEM_MESSAGE, Columns.IS_READ, Columns.IS_DISCARDED, Columns.IS_DELETED,Columns.PERSISTED,Columns.NOTIFIED);
+      public static final String DROP_TABLE = String.format("DROP TABLE IF EXISTS %s", Name);
+      public static final String DELETE_OLD_MESSAGES = String.format("DELETE FROM %s WHERE %s = 1 AND %s < ?", Name, Columns.IS_DELETED, Columns.PERSISTED);
+      public static final String WHERE_MESSAGES_TO_READ = String.format("%s = 0 AND %s = 0 AND %s = 0", Columns.IS_DISCARDED,Columns.IS_DELETED,Columns.IS_READ);
+    }
+  }
+  
   private static final String DATABASE_NAME = "connector.db";
-  private static final int DATABASE_VERSION = 1;
+  private static final int DATABASE_VERSION = 3;
   
 
   public DbHelper(Context context) {
@@ -97,15 +140,17 @@ class DbHelper extends SQLiteOpenHelper {
   public void onCreate(SQLiteDatabase database) {
     database.execSQL(TableGames.SqlCommands.CREATE_TABLE);
     database.execSQL(TablePlayers.SqlCommands.CREATE_TABLE);
-
+    database.execSQL(TableMessage.SqlCommands.CREATE_TABLE);
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
     database.execSQL(TableGames.SqlCommands.DROP_TABLE);
     database.execSQL(TablePlayers.SqlCommands.DROP_TABLE);
+    database.execSQL(TableMessage.SqlCommands.DROP_TABLE);
     database.execSQL(TableGames.SqlCommands.CREATE_TABLE);
     database.execSQL(TablePlayers.SqlCommands.CREATE_TABLE);
+    database.execSQL(TableMessage.SqlCommands.CREATE_TABLE);
   }
   
   

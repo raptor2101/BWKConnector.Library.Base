@@ -16,10 +16,9 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
 import de.raptor2101.BattleWorldsKronos.Connector.Task.GamesLoaderTask;
-import de.raptor2101.BattleWorldsKronos.Connector.Task.GamesLoaderTask.Result;
-import de.raptor2101.BattleWorldsKronos.Connector.Task.GamesLoaderTask.ResultListener;
+import de.raptor2101.BattleWorldsKronos.Connector.Task.LoaderTask.ResultListener;
 
-public class NotificationService extends Service implements ResultListener {
+public class NotificationService extends Service implements ResultListener<GamesLoaderTask.Result> {
   private static final String ServiceTag = "BWK:Connector-Service";
   private static final int NotificationIdPendingGames = 1;
 
@@ -50,7 +49,7 @@ public class NotificationService extends Service implements ResultListener {
   }
 
   @Override
-  public void handleResult(Result result) {
+  public void handleResult(GamesLoaderTask.Result result) {
     if (result == null) {
       return;
     }

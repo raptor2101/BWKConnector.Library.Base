@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game;
+import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Message;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Player;
 
 public class ServerConnection {
@@ -41,7 +42,7 @@ public class ServerConnection {
   private static final String JSON_IDENTIFIER_USER_ID = "userId";
   private static final String JSON_IDENTIFIER_ID = "id";
   
-  private class GameObjectIdenifiers{
+  private class GameObjectIdentifiers {
     public static final String GAME_ID = "gameId";
     public static final String MAP_ID = "mapId";
     public static final String NAME = "name";
@@ -54,7 +55,8 @@ public class ServerConnection {
     public static final String UPDATED = "updated";
     public static final String CURRENT_TURN = "currentTurn";
   }
-  private class PlayerObjectIdenifiers{
+  
+  private class PlayerObjectIdentifiers {
     public static final String PLAYER_ID = "playerId";
     public static final String USER_ID = "userId";
     public static final String TEAM = "team";
@@ -63,6 +65,22 @@ public class ServerConnection {
     public static final String STATE = "state";
     public static final String LAST_MESSAGE = "last_message";
   }
+  
+  private class MessageObjectIdentifiers {
+    public static final String ID = "id";
+    public static final String AUTHOR_ID = "author_id";
+    public static final String AUTHOR_NAME = "author_name";
+    public static final String TIMESTAMP = "timestamp";
+    public static final String MESSAGE = "message";
+    public static final String LAST_MESSAGE_ID = "last_message_id";
+    public static final String SYSTEM_MESSAGE = "system_message";
+    
+    public static final String READ = "read";
+    public static final String DISCARDED = "discarded";
+    public static final String DELETED = "deleted";
+  }
+  
+  
   public static final HashMap<String, Player.State> PLAYER_STATES = new HashMap<String, Player.State>();
   public static final HashMap<String, Game.State> GAME_STATES = new HashMap<String, Game.State>();
     
@@ -81,8 +99,10 @@ public class ServerConnection {
   }
 
   private enum JsonMethod {
-    // TODO: woher bekomm ich sinnvoll die werte her?
-    LOGIN(1, "login", serverUrl+"/api/userservice.php"), GETGAMES(5, "getGames", serverUrl+"/api/gameservice.php");
+    LOGIN(1, "login", serverUrl+"/api/userservice.php"),
+    GETMESSAGES(2, "getMessages", serverUrl+"/api/userservice.php"),
+    GETGAMES(5, "getGames", serverUrl+"/api/gameservice.php");
+    
 
     private final int mIntValue;
     private final String mStringValue;
@@ -167,23 +187,62 @@ public class ServerConnection {
     return games;
   }
 
+
+  public List<Message> getMessages() throws JSONException, ClientProtocolException, IOException, ParseException {
+  
+    String responseText = performMethod(JsonMethod.GETMESSAGES,mUserId);
+    
+    JSONObject jsonObject = new JSONObject(responseText);
+    jsonObject = jsonObject.getJSONObject(JSON_IDENTIFIER_RESULT);
+    
+    JSONArray messageBundle = jsonObject.getJSONArray("messageBundle");
+    
+    List<Message> messages = new ArrayList<Message>(messageBundle.length());
+    for(int i=0;i<messageBundle.length();i++){
+      messages.add(decodeMessageData(messageBundle.getJSONObject(i)));
+    }
+    
+    return messages; 
+  }
+  
+  private Message decodeMessageData(JSONObject jsonObject) throws JSONException, ParseException{
+    JSONObject messageObject = jsonObject.getJSONObject("message");
+    JSONObject infoObject = jsonObject.getJSONObject("info");
+    
+    Message message = new Message();
+    
+    message.setMessageId(messageObject.getInt(MessageObjectIdentifiers.ID));
+    message.setAuthorId(messageObject.getInt(MessageObjectIdentifiers.AUTHOR_ID));
+    message.setAuthorName(messageObject.getString(MessageObjectIdentifiers.AUTHOR_NAME));
+    message.setTimestamp(DateFormat.parse(messageObject.getString(MessageObjectIdentifiers.TIMESTAMP)));
+    message.setMessage(messageObject.getString(MessageObjectIdentifiers.MESSAGE));
+    message.setLastMessageId(messageObject.getInt(MessageObjectIdentifiers.LAST_MESSAGE_ID));
+    message.setIsSystemMessage(messageObject.getBoolean(MessageObjectIdentifiers.SYSTEM_MESSAGE));
+    message.setIsReaded(infoObject.getBoolean(MessageObjectIdentifiers.READ));
+    message.setIsDiscarded(infoObject.getBoolean(MessageObjectIdentifiers.DISCARDED));
+    message.setIsDeleted(infoObject.getBoolean(MessageObjectIdentifiers.DELETED));
+    
+    return message;
+  }
+  
+  
   private Game decodeGameData(JSONObject jsonObject) throws JSONException, ParseException{
-    String stringState = jsonObject.getString(GameObjectIdenifiers.STATE);
-    String stringCreateDate = jsonObject.getString(GameObjectIdenifiers.CREATED);
-    String stringUpdateDate = jsonObject.getString(GameObjectIdenifiers.UPDATED);
+    String stringState = jsonObject.getString(GameObjectIdentifiers.STATE);
+    String stringCreateDate = jsonObject.getString(GameObjectIdentifiers.CREATED);
+    String stringUpdateDate = jsonObject.getString(GameObjectIdentifiers.UPDATED);
     
     Game game = new Game();
-    game.setGameId(jsonObject.getInt(GameObjectIdenifiers.GAME_ID));
-    game.setMapId(jsonObject.getInt(GameObjectIdenifiers.MAP_ID));
-    game.setGameName(jsonObject.getString(GameObjectIdenifiers.NAME));
-    game.setOwnerId(jsonObject.getInt(GameObjectIdenifiers.OWNER_ID));
-    game.setCurrentRound(jsonObject.getInt(GameObjectIdenifiers.CURRENT_ROUND));
-    game.setCurrentTurn(jsonObject.getInt(GameObjectIdenifiers.CURRENT_TURN));
-    game.setNextPlayerId(jsonObject.getInt(GameObjectIdenifiers.NEXT_PLAYER_ID));
+    game.setGameId(jsonObject.getInt(GameObjectIdentifiers.GAME_ID));
+    game.setMapId(jsonObject.getInt(GameObjectIdentifiers.MAP_ID));
+    game.setGameName(jsonObject.getString(GameObjectIdentifiers.NAME));
+    game.setOwnerId(jsonObject.getInt(GameObjectIdentifiers.OWNER_ID));
+    game.setCurrentRound(jsonObject.getInt(GameObjectIdentifiers.CURRENT_ROUND));
+    game.setCurrentTurn(jsonObject.getInt(GameObjectIdentifiers.CURRENT_TURN));
+    game.setNextPlayerId(jsonObject.getInt(GameObjectIdentifiers.NEXT_PLAYER_ID));
     game.setCreateDate(ServerConnection.DateFormat.parse(stringCreateDate));
     game.setUpdateDate(ServerConnection.DateFormat.parse(stringUpdateDate));
     
-    JSONArray playerArray = jsonObject.getJSONArray(GameObjectIdenifiers.PLAYERS);
+    JSONArray playerArray = jsonObject.getJSONArray(GameObjectIdentifiers.PLAYERS);
     decodePlayerData(game, playerArray);
     
     game.setState(decodeGameState(game, stringState));
@@ -198,20 +257,20 @@ public class ServerConnection {
       JSONObject jsonObject = playerArray.getJSONObject(i);
       
       Player player = new Player();
-      player.setPlayerId(jsonObject.getInt(PlayerObjectIdenifiers.PLAYER_ID));
-      int userId = jsonObject.getInt(PlayerObjectIdenifiers.USER_ID);
+      player.setPlayerId(jsonObject.getInt(PlayerObjectIdentifiers.PLAYER_ID));
+      int userId = jsonObject.getInt(PlayerObjectIdentifiers.USER_ID);
       
       if(userId == 0){
         continue;
       }
           
       player.setUserId(userId);
-      player.setPlayerName(jsonObject.getString(PlayerObjectIdenifiers.NAME));
-      player.setTeam(jsonObject.getInt(PlayerObjectIdenifiers.TEAM));
-      player.setColor(jsonObject.getString(PlayerObjectIdenifiers.COLOR));
-      player.setLastMessage(jsonObject.getString(PlayerObjectIdenifiers.LAST_MESSAGE));
+      player.setPlayerName(jsonObject.getString(PlayerObjectIdentifiers.NAME));
+      player.setTeam(jsonObject.getInt(PlayerObjectIdentifiers.TEAM));
+      player.setColor(jsonObject.getString(PlayerObjectIdentifiers.COLOR));
+      player.setLastMessage(jsonObject.getString(PlayerObjectIdentifiers.LAST_MESSAGE));
       
-      String stateString = jsonObject.getString(PlayerObjectIdenifiers.STATE);
+      String stateString = jsonObject.getString(PlayerObjectIdentifiers.STATE);
       Player.State state = PLAYER_STATES.get(stateString);
             
       if (state == Player.State.WON) {

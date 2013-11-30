@@ -3,14 +3,16 @@ package de.raptor2101.BattleWorldsKronos.Connector.Task;
 import java.util.List;
 
 import android.content.Context;
-import android.net.http.AndroidHttpClient;
-import android.os.AsyncTask;
-import de.raptor2101.BattleWorldsKronos.Connector.AbstractConnectorApp;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Database;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game;
 import de.raptor2101.BattleWorldsKronos.Connector.JSON.ServerConnection;
 
-public class GamesLoaderTask extends AsyncTask<Boolean, Void, GamesLoaderTask.Result> {
+public class GamesLoaderTask extends LoaderTask<GamesLoaderTask.Result> {
+  
+  public GamesLoaderTask(Context context, String eMail, String password, ResultListener<Result> resultListener) {
+    super(context, eMail, password, resultListener);
+  }
+
   public class Result{
     private final List<Game> mGames;
     private final int mUnnotifiedPendingGames;
@@ -46,45 +48,28 @@ public class GamesLoaderTask extends AsyncTask<Boolean, Void, GamesLoaderTask.Re
       mOpenGames = openGames;
     }
   }
-  public interface ResultListener {
-    void handleResult(Result result);
-  }
-
-  private AndroidHttpClient mHttpClient;
-  private Database mDatabase;
-  private ResultListener mListener;
-  private String mEMail;
-  private String mPassword;
-  
-
-  public GamesLoaderTask(Context context, String eMail, String password, ResultListener listener) {
-    AbstractConnectorApp app = (AbstractConnectorApp) context.getApplicationContext();
-    mHttpClient = app.getHttpClient();
-    mDatabase = app.getDatabase();
-    mListener = listener;
-    mEMail = eMail;
-    mPassword = password;
-  }
 
   @Override
   protected Result doInBackground(Boolean... params) {
-    ServerConnection connection = new ServerConnection(mHttpClient);
     try {
+      Database database = getDatabase();
       List<Game> games = null;
+      
       boolean forceUpdate = params.length > 0 && params[0]; 
       if(forceUpdate){
-        if (connection.login(mEMail, mPassword)) {
+        ServerConnection connection = getConnection();
+        if (connection != null) {
           games = connection.getGames();
-          mDatabase.persistGames(games);
+          database.persistGames(games);
         }
       }
       
-      games = mDatabase.getGames();
+      games = database.getGames();
       
-      int unnotifiedPendingGames = mDatabase.getUnnotfiedPendingGamesCount();
-      int pendingGames = mDatabase.getPendingGamesCount();
+      int unnotifiedPendingGames = database.getUnnotfiedPendingGamesCount();
+      int pendingGames = database.getPendingGamesCount();
       
-      mDatabase.setAllGamesNotified();
+      database.setAllGamesNotified();
       
       return new Result(games, unnotifiedPendingGames, pendingGames, 0, 0);
     } catch (Exception e) {
@@ -92,11 +77,5 @@ public class GamesLoaderTask extends AsyncTask<Boolean, Void, GamesLoaderTask.Re
       e.printStackTrace();
     }
     return null;
-  }
-
-  @Override
-  protected void onPostExecute(Result result) {
-    mListener.handleResult(result);
-    mHttpClient.close();
   }
 }
