@@ -35,7 +35,7 @@ public class MessageLoaderTask extends LoaderTask<MessageLoaderTask.Result> {
       Database database = getDatabase();
       boolean forceUpdate = params.length > 0 && params[0]; 
       
-      List<Message> messages;
+      List<Message> messages = null;
       if(forceUpdate){
         ServerConnection connection = getConnection();
         if (connection != null) {
@@ -44,7 +44,10 @@ public class MessageLoaderTask extends LoaderTask<MessageLoaderTask.Result> {
         }
       }
       
+      messages = database.getMessages();
       
+      
+      return new Result(messages, 0);
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
