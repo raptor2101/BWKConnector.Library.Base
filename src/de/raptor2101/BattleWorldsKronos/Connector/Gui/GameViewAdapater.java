@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game;
-import de.raptor2101.BattleWorldsKronos.Connector.Gui.Controls.GameView;
+import de.raptor2101.BattleWorldsKronos.Connector.Gui.Views.GameView;
 
 import android.content.Context;
 import android.view.View;

@@ -1,4 +1,4 @@
-package de.raptor2101.BattleWorldsKronos.Connector.Gui.Controls;
+package de.raptor2101.BattleWorldsKronos.Connector.Gui.Views;
 
 import android.content.Context;
 import android.view.LayoutInflater;

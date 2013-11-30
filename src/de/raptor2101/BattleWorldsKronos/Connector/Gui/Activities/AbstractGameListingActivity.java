@@ -17,7 +17,7 @@ import de.raptor2101.BattleWorldsKronos.Connector.NotificationService;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.GameViewAdapater;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.NavigationButtonAdapter;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
-import de.raptor2101.BattleWorldsKronos.Connector.Gui.Controls.GameView;
+import de.raptor2101.BattleWorldsKronos.Connector.Gui.Views.GameView;
 import de.raptor2101.BattleWorldsKronos.Connector.Task.GamesLoaderTask;
 import de.raptor2101.BattleWorldsKronos.Connector.Task.LoaderTask.ResultListener;
 

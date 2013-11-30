@@ -1,4 +1,4 @@
-package de.raptor2101.BattleWorldsKronos.Connector.Gui.Controls;
+package de.raptor2101.BattleWorldsKronos.Connector.Gui.Views;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
