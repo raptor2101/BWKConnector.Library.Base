@@ -12,7 +12,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.SystemClock;
-import de.raptor2101.BattleWorldsKronos.Connector.Data.DbHelper.TableMessage.Columns;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Message;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Player;

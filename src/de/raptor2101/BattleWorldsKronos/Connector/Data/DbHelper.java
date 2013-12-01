@@ -147,7 +147,7 @@ class DbHelper extends SQLiteOpenHelper {
   }
   
   private static final String DATABASE_NAME = "connector.db";
-  private static final int DATABASE_VERSION = 2;
+  private static final int DATABASE_VERSION = 4;
   
 
   public DbHelper(Context context) {
