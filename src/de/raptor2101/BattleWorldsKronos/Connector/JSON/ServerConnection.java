@@ -215,12 +215,12 @@ public class ServerConnection {
     message.setAuthorId(messageObject.getInt(MessageObjectIdentifiers.AUTHOR_ID));
     message.setAuthorName(messageObject.getString(MessageObjectIdentifiers.AUTHOR_NAME));
     message.setTimestamp(DateFormat.parse(messageObject.getString(MessageObjectIdentifiers.TIMESTAMP)));
-    message.setMessage(messageObject.getString(MessageObjectIdentifiers.MESSAGE));
+    message.setMessageText(messageObject.getString(MessageObjectIdentifiers.MESSAGE));
     message.setLastMessageId(messageObject.getInt(MessageObjectIdentifiers.LAST_MESSAGE_ID));
-    message.setIsSystemMessage(messageObject.getBoolean(MessageObjectIdentifiers.SYSTEM_MESSAGE));
-    message.setIsReaded(infoObject.getBoolean(MessageObjectIdentifiers.READ));
-    message.setIsDiscarded(infoObject.getBoolean(MessageObjectIdentifiers.DISCARDED));
-    message.setIsDeleted(infoObject.getBoolean(MessageObjectIdentifiers.DELETED));
+    message.setSystemMessage(messageObject.getBoolean(MessageObjectIdentifiers.SYSTEM_MESSAGE));
+    message.setReaded(infoObject.getBoolean(MessageObjectIdentifiers.READ));
+    message.setDiscarded(infoObject.getBoolean(MessageObjectIdentifiers.DISCARDED));
+    message.setDeleted(infoObject.getBoolean(MessageObjectIdentifiers.DELETED));
     
     return message;
   }

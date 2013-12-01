@@ -69,4 +69,7 @@
     <string name="title_activity_games">Spiele</string>
     <string name="title_activity_messages">Nachrichten</string>
     <string name="title_activity_settings">Einstellungen</string>
+    
+    <string name="server_message_watchlist_prefix">Hallo! Der Benutzer</string>
+    <string name="server_message_watchlist_suffix">hat dich seiner Watchlist hinzugefügt! Falls du ihn ebenfalls deiner Watchlist hinzufügen möchtest, tippe seinen Namen in das Watchlist-Fenster im Chat ein!</string>
 </resources>

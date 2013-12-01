@@ -7,7 +7,7 @@ public class Message {
   private int mAuthorId;
   private String mAuthorName;
   private Date mTimestamp;
-  private String mMessage;
+  private String mMessageText;
   private int mLastMessageId;
   private boolean mIsSystemMessage;
   
@@ -38,11 +38,11 @@ public class Message {
   public void setTimestamp(Date timestamp) {
     this.mTimestamp = timestamp;
   }
-  public String getMessage() {
-    return mMessage;
+  public String getMessageText() {
+    return mMessageText;
   }
-  public void setMessage(String message) {
-    this.mMessage = message;
+  public void setMessageText(String text) {
+    this.mMessageText = text;
   }
   public int getLastMessageId() {
     return mLastMessageId;
@@ -53,25 +53,25 @@ public class Message {
   public boolean isSystemMessage() {
     return mIsSystemMessage;
   }
-  public void setIsSystemMessage(boolean isSystemMessage) {
+  public void setSystemMessage(boolean isSystemMessage) {
     this.mIsSystemMessage = isSystemMessage;
   }
   public boolean isReaded() {
     return mIsReaded;
   }
-  public void setIsReaded(boolean isReaded) {
+  public void setReaded(boolean isReaded) {
     this.mIsReaded = isReaded;
   }
   public boolean isDiscarded() {
     return mIsDiscarded;
   }
-  public void setIsDiscarded(boolean isDiscarded) {
+  public void setDiscarded(boolean isDiscarded) {
     this.mIsDiscarded = isDiscarded;
   }
   public boolean isDeleted() {
     return mIsDeleted;
   }
-  public void setIsDeleted(boolean isDeleted) {
+  public void setDeleted(boolean isDeleted) {
     this.mIsDeleted = isDeleted;
   }
 }

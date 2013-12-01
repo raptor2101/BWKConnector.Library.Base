@@ -73,12 +73,12 @@ public class Database {
         message.setAuthorId(cursor.getInt(1));
         message.setAuthorName(cursor.getString(2));
         message.setTimestamp(DATE_FORMAT.parse(cursor.getString(3)));
-        message.setMessage(cursor.getString(4));
+        message.setMessageText(cursor.getString(4));
         message.setLastMessageId(cursor.getInt(5));
-        message.setIsSystemMessage(cursor.getInt(6)==1);
-        message.setIsReaded(cursor.getInt(7)==1);
-        message.setIsDiscarded(cursor.getInt(8)==1);
-        message.setIsDeleted(cursor.getInt(9)==1);
+        message.setSystemMessage(cursor.getInt(6)==1);
+        message.setReaded(cursor.getInt(7)==1);
+        message.setDiscarded(cursor.getInt(8)==1);
+        message.setDeleted(cursor.getInt(9)==1);
         
         messages.add(message);
       } catch (ParseException e) {
@@ -97,7 +97,7 @@ public class Database {
     contentValues.put(DbHelper.TableMessage.Columns.AUTHOR_ID, message.getAuthorId());
     contentValues.put(DbHelper.TableMessage.Columns.AUTHOR_NAME, message.getAuthorName());
     contentValues.put(DbHelper.TableMessage.Columns.TIMESTAMP, DATE_FORMAT.format(message.getTimestamp()));
-    contentValues.put(DbHelper.TableMessage.Columns.MESSAGE, message.getMessage());
+    contentValues.put(DbHelper.TableMessage.Columns.MESSAGE, message.getMessageText());
     contentValues.put(DbHelper.TableMessage.Columns.LAST_MESSAGE_ID, message.getLastMessageId());
     contentValues.put(DbHelper.TableMessage.Columns.IS_SYSTEM_MESSAGE, message.isSystemMessage());
     contentValues.put(DbHelper.TableMessage.Columns.IS_READ, message.isReaded());
