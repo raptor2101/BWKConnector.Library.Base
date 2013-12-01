@@ -128,8 +128,26 @@ class DbHelper extends SQLiteOpenHelper {
     }
   }
   
+  static class TableLastUpdate{
+    public static final String Name = "last_update";
+    
+    static class Columns {
+      public static final String Name = "name";
+      public static final String Timestamp = "timestamp";
+    }
+    
+    static class SqlCommands {
+      public static final String CREATE_TABLE = String.format("CREATE TABLE %s (" +
+          "%s VARCHAR(50)   NOT NULL PRIMARY KEY,"+
+          "%s INTEGER       NOT NULL" +
+          ")",
+          Name,Columns.Name,Columns.Timestamp);
+      public static final String DROP_TABLE = String.format("DROP TABLE IF EXISTS %s", Name);
+    }
+  }
+  
   private static final String DATABASE_NAME = "connector.db";
-  private static final int DATABASE_VERSION = 3;
+  private static final int DATABASE_VERSION = 2;
   
 
   public DbHelper(Context context) {
@@ -141,6 +159,7 @@ class DbHelper extends SQLiteOpenHelper {
     database.execSQL(TableGames.SqlCommands.CREATE_TABLE);
     database.execSQL(TablePlayers.SqlCommands.CREATE_TABLE);
     database.execSQL(TableMessage.SqlCommands.CREATE_TABLE);
+    database.execSQL(TableLastUpdate.SqlCommands.CREATE_TABLE);
   }
 
   @Override
@@ -148,9 +167,11 @@ class DbHelper extends SQLiteOpenHelper {
     database.execSQL(TableGames.SqlCommands.DROP_TABLE);
     database.execSQL(TablePlayers.SqlCommands.DROP_TABLE);
     database.execSQL(TableMessage.SqlCommands.DROP_TABLE);
+    database.execSQL(TableLastUpdate.SqlCommands.DROP_TABLE);
     database.execSQL(TableGames.SqlCommands.CREATE_TABLE);
     database.execSQL(TablePlayers.SqlCommands.CREATE_TABLE);
     database.execSQL(TableMessage.SqlCommands.CREATE_TABLE);
+    database.execSQL(TableLastUpdate.SqlCommands.CREATE_TABLE);
   }
   
   

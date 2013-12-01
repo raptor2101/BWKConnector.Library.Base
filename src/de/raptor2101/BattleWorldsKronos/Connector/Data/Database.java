@@ -53,6 +53,7 @@ public class Database {
     }
     
     deleteOldMessages(persistTimestamp);
+    setLastUpdate(DbHelper.TableMessage.Name, persistTimestamp);
   }
   
   private void deleteOldMessages(long persistTimestamp) {
@@ -133,6 +134,7 @@ public class Database {
     }
     
     deleteOldGames(persistTimestamp);
+    setLastUpdate(DbHelper.TableGames.Name, persistTimestamp);
   }
 
   private void deleteOldGames(long persistTimestamp) {
@@ -245,8 +247,17 @@ public class Database {
     mDatabase.update(DbHelper.TableGames.Name, contentValues, String.format(DbHelper.EQUALS, DbHelper.TableGames.Columns.NOTIFIED), new String[]{"0"});
   }
   
-  public long getLastPersistTimestamp(){
-    Cursor cursor = mDatabase.rawQuery(DbHelper.TableGames.SqlCommands.MIN_PERSIST_TIMESTAMP, null);
+  public long getTimestampLastGameUpdate(){
+    return getLastUpdate(DbHelper.TableGames.Name);
+  }
+  
+  public long getTimestampMessagesUpdate(){
+    return getLastUpdate(DbHelper.TableMessage.Name);
+  }
+  
+  private long getLastUpdate(String tableName){
+    Cursor cursor = mDatabase.query(DbHelper.TableLastUpdate.Name, new String[]{DbHelper.TableLastUpdate.Columns.Timestamp}, String.format(DbHelper.EQUALS,DbHelper.TableLastUpdate.Columns.Name), new String[]{tableName}, null, null, null);
+    
     long returnValue = 0;
     cursor.moveToFirst();
     if(!cursor.isAfterLast()){
@@ -256,6 +267,18 @@ public class Database {
     
     return returnValue;
   }
+  
+  private void setLastUpdate(String tableName, long timestamp){
+    ContentValues values = new ContentValues(2);
+    values.put(DbHelper.TableLastUpdate.Columns.Name, tableName);
+    values.put(DbHelper.TableLastUpdate.Columns.Timestamp, timestamp);
+    
+    int updatedRows = mDatabase.update(DbHelper.TableLastUpdate.Name, values, String.format(DbHelper.EQUALS,DbHelper.TableLastUpdate.Columns.Name), new String[]{tableName});
+    if(updatedRows == 0){
+      mDatabase.insert(DbHelper.TableLastUpdate.Name, null, values);
+    }
+  }
+  
   
   private int getSingleIntFromCursor(Cursor cursor){
     int returnValue = 0;

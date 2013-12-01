@@ -12,7 +12,7 @@
     
     <string name="label_player_info_view_LastMessage">LastMessage</string>
     
-    <string name="title_activity_settings">SettingsActivity</string>
+    
     <string name="setting_label_email">E-Mail</string>
     <string name="setting_label_password">Password</string>
     <string name="setting_label_notification">Notfication</string>
@@ -43,7 +43,8 @@
     <string name="player_state_waiting">Waiting</string>
     <string name="player_state_unknown">Unknown</string>
     
-    <string name="message_games_pending">There are %d games waiting for your interaction</string>
+    <string name="notification_games_pending">There are %d games waiting for your interaction</string>
+    <string name="notification_messages_unread">There are %d unreaded messages</string>
     <string name="date_format_string">"yyyy.MM.dd HH:mm"</string>
     
     <string-array name="setting_spinner_updatecycle">
@@ -64,4 +65,7 @@
     
     <string name="application_icon">Application Icon</string>
     <string name="message_view_label_wrote">wrote at</string>
+    <string name="title_activity_games">Games</string>
+    <string name="title_activity_messages">Messages</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 </resources>

@@ -44,7 +44,8 @@
     <string name="player_state_waiting">Wartet</string>
     <string name="player_state_unknown">Unbekannt</string>
     
-    <string name="message_games_pending">%d Spiele warten auf deinen Zug.</string>
+    <string name="notification_games_pending">%d Spiele warten auf deinen Zug.</string>
+    <string name="notification_messages_unread">%d ungelesene Nachrichten</string>
     <string name="date_format_string">"dd.MM.yyyy HH:mm"</string>
     
     <string-array name="setting_spinner_updatecycle">
@@ -64,4 +65,5 @@
     <string name="navigation_messages">Nachrichten</string>
     
     <string name="application_icon">Anwendungsicon</string>
+    <string name="message_view_label_wrote">schrieb am</string>
 </resources>

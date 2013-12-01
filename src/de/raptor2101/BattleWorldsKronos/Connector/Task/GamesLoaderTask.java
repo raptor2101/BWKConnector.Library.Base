@@ -24,8 +24,8 @@ public class GamesLoaderTask extends LoaderTask<GamesLoaderTask.Result> {
       return mUnnotifiedPendingGames;
     }
 
-    public int getPendingGames() {
-      return mPendingGames;
+    public int getPendingGamesCount() {
+      return mPendingGamesCount;
     }
 
     public int getUnnotifiedOpenGames() {
@@ -36,15 +36,15 @@ public class GamesLoaderTask extends LoaderTask<GamesLoaderTask.Result> {
       return mOpenGames;
     }
 
-    private final int mPendingGames;
+    private final int mPendingGamesCount;
     private final int mUnnotifiedOpenGames;
     private final int mOpenGames;
     
-    public Result(List<Game> games, int unnotfiedPendingGames, int pendingGames, int unnotifiedOpenGames, int openGames){
+    public Result(List<Game> games, int unnotfiedPendingGames, int pendingGamesCount, int unnotifiedOpenGames, int openGames){
       mGames = games;
       mUnnotifiedPendingGames = unnotfiedPendingGames;
       mUnnotifiedOpenGames = unnotifiedOpenGames;
-      mPendingGames = pendingGames;
+      mPendingGamesCount = pendingGamesCount;
       mOpenGames = openGames;
     }
   }

@@ -16,7 +16,6 @@ import de.raptor2101.BattleWorldsKronos.Connector.ApplicationSettings;
 import de.raptor2101.BattleWorldsKronos.Connector.NotificationService;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.Adapters.GameViewAdapter;
-import de.raptor2101.BattleWorldsKronos.Connector.Gui.Adapters.NavigationButtonAdapter;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.Views.GameView;
 import de.raptor2101.BattleWorldsKronos.Connector.Task.GamesLoaderTask;
 import de.raptor2101.BattleWorldsKronos.Connector.Task.LoaderTask.ResultListener;
@@ -25,20 +24,15 @@ public abstract class AbstractGameListingActivity extends Activity implements Re
   public final static String TAG_EXPENDABLE = "expendable";
   GameViewAdapter mGameViewAdapater = new GameViewAdapter(this);
   GameView mExpandedView;
+  
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    
+    super.onCreate(savedInstanceState);    
     setContentView(R.layout.game_listing_activity);
     
-    NavigationButtonAdapter adapter = new NavigationButtonAdapter(this, R.menu.navigation_menu);
-    
-    AbsListView listView = (AbsListView) findViewById(R.id.navigation_menu);
-    listView.setAdapter(adapter);
     
     
-    
-    listView = (AbsListView) findViewById(R.id.game_listing);
+    AbsListView listView = (AbsListView) findViewById(R.id.game_listing);
     listView.setAdapter(mGameViewAdapater);
     if(TAG_EXPENDABLE.equals(listView.getTag())){
       listView.setOnItemClickListener(this);
@@ -62,7 +56,7 @@ public abstract class AbstractGameListingActivity extends Activity implements Re
     }
     
     AbstractConnectorApp app = (AbstractConnectorApp) getApplication();
-    long lastLoad = app.getDatabase().getLastPersistTimestamp();
+    long lastLoad = app.getDatabase().getTimestampLastGameUpdate();
     loadGames(SystemClock.elapsedRealtime()-lastLoad>settings.getRefreshCylce());
   }
 
@@ -79,7 +73,6 @@ public abstract class AbstractGameListingActivity extends Activity implements Re
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.menu, menu);
     return true;
   }
@@ -100,7 +93,7 @@ public abstract class AbstractGameListingActivity extends Activity implements Re
     progressBar.setVisibility(View.GONE);
     if(result != null){
       mGameViewAdapater.setGames(result.getGames());
-      NotificationService.reset(this);
+      NotificationService.resetPendingGames(this);
     }
   }
   
