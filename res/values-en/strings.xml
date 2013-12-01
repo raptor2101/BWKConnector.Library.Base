@@ -67,5 +67,5 @@
     <string name="message_view_label_wrote">wrote at</string>
     <string name="title_activity_games">Games</string>
     <string name="title_activity_messages">Messages</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings</string>
 </resources>

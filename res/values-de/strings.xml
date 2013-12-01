@@ -13,7 +13,6 @@
     
     <string name="label_player_info_view_LastMessage">Letzte Nachricht</string>
     
-    <string name="title_activity_settings">Einstellungen</string>
     <string name="setting_label_email">E-Mail</string>
     <string name="setting_label_password">Passwort</string>
     <string name="setting_label_notification">Benachrichtigung</string>
@@ -66,4 +65,8 @@
     
     <string name="application_icon">Anwendungsicon</string>
     <string name="message_view_label_wrote">schrieb am</string>
+    
+    <string name="title_activity_games">Spiele</string>
+    <string name="title_activity_messages">Nachrichten</string>
+    <string name="title_activity_settings">Einstellungen</string>
 </resources>
