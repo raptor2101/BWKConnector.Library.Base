@@ -127,7 +127,10 @@ public class Database {
           contentValues = new ContentValues(2);
           contentValues.put(DbHelper.TablePlayers.Columns.STATE, player.getState().getValue());
           contentValues.put(DbHelper.TablePlayers.Columns.LAST_MESSAGE, player.getLastMessage());
-          updatePlayer(player.getPlayerId(), contentValues);
+          if(updatePlayer(player.getPlayerId(), contentValues) == 0){
+            contentValues = buildContentValues(gameId, player);
+            insertPlayer(contentValues);
+          }
         }
       }
     }
@@ -183,10 +186,10 @@ public class Database {
     return contentValues;
   }
 
-  private void updatePlayer(int playerId, ContentValues contentValues) {
+  private int updatePlayer(int playerId, ContentValues contentValues) {
     String whereCondition = String.format(DbHelper.EQUALS, DbHelper.TablePlayers.Columns.PLAYER_ID);
     String[] arguments = new String[] { String.valueOf(playerId) };
-    mDatabase.update(DbHelper.TablePlayers.Name, contentValues, whereCondition, arguments);
+    return mDatabase.update(DbHelper.TablePlayers.Name, contentValues, whereCondition, arguments);
   }
 
   private void insertGame(ContentValues contentValues) {
