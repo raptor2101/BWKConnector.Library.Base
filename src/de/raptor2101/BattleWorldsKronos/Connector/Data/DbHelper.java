@@ -123,7 +123,7 @@ class DbHelper extends SQLiteOpenHelper {
           ")",
         Name, Columns.MESSAGE_ID, Columns.AUTHOR_ID, Columns.AUTHOR_NAME, Columns.TIMESTAMP, Columns.MESSAGE, Columns.LAST_MESSAGE_ID, Columns.IS_SYSTEM_MESSAGE, Columns.IS_READ, Columns.IS_DISCARDED, Columns.IS_DELETED,Columns.PERSISTED,Columns.NOTIFIED);
       public static final String DROP_TABLE = String.format("DROP TABLE IF EXISTS %s", Name);
-      public static final String DELETE_OLD_MESSAGES = String.format("DELETE FROM %s WHERE %s = 1 AND %s < ?", Name, Columns.IS_DELETED, Columns.PERSISTED);
+      public static final String DELETE_OLD_MESSAGES = String.format("DELETE FROM %s WHERE %s = 1 OR %s < ?", Name, Columns.IS_DELETED, Columns.PERSISTED);
       public static final String WHERE_MESSAGES_TO_READ = String.format("%s = 0 AND %s = 0", Columns.IS_DISCARDED,Columns.IS_DELETED);
     }
   }
