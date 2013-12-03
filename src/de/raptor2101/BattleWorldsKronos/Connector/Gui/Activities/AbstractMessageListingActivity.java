@@ -54,6 +54,8 @@ public abstract class AbstractMessageListingActivity extends Activity implements
     startActivity(intent);
   }
   
+  protected abstract void startWriteMessageActivity();
+  
   private void loadMessages(boolean forceReload){
     ApplicationSettings settings = new ApplicationSettings(this);
     
@@ -76,10 +78,7 @@ public abstract class AbstractMessageListingActivity extends Activity implements
   }
   
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.menu, menu);
-    return true;
-  }
+  public abstract boolean onCreateOptionsMenu(Menu menu);
 
   @Override
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -87,7 +86,10 @@ public abstract class AbstractMessageListingActivity extends Activity implements
       startSettingsActivity();
     } else if (item.getItemId() == R.id.action_refresh){
       loadMessages(true);
+    } else if (item.getItemId() == R.id.action_write_message){
+      startWriteMessageActivity();
     }
+    
     return super.onMenuItemSelected(featureId, item);
   }
   

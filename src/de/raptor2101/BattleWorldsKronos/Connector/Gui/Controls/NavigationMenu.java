@@ -30,6 +30,10 @@ public class NavigationMenu extends ListView implements android.widget.AdapterVi
   }
   
   private void setupNavigationMenu(Context context){
+    if(isInEditMode()){
+      return;
+    }
+    
     mContext = context;
     mAdapter = new NavigationButtonAdapter(context, R.menu.navigation_menu);
     this.setAdapter(mAdapter);

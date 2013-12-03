@@ -72,10 +72,7 @@ public abstract class AbstractGameListingActivity extends Activity implements Re
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.menu, menu);
-    return true;
-  }
+  public abstract boolean onCreateOptionsMenu(Menu menu);
 
   @Override
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
