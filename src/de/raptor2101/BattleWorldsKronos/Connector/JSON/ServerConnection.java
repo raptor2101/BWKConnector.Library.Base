@@ -75,6 +75,10 @@ public class ServerConnection {
     public static final String LAST_MESSAGE_ID = "last_message_id";
     public static final String SYSTEM_MESSAGE = "system_message";
     
+    public static final String RECEIVER_NAME = "receiverName";
+    public static final String LAST_MESSAGE = "lastMessage";
+    public static final String USER_ID = "userId";
+    
     public static final String READ = "read";
     public static final String DISCARDED = "discarded";
     public static final String DELETED = "deleted";
@@ -101,7 +105,8 @@ public class ServerConnection {
   private enum JsonMethod {
     LOGIN(1, "login", serverUrl+"/api/userservice.php"),
     GETMESSAGES(2, "getMessages", serverUrl+"/api/userservice.php"),
-    GETGAMES(5, "getGames", serverUrl+"/api/gameservice.php");
+    GETGAMES(5, "getGames", serverUrl+"/api/gameservice.php"),
+    SENDMESSAGE(10,"sendMessage",serverUrl+"/api/userservice.php");
     
 
     private final int mIntValue;
@@ -190,7 +195,7 @@ public class ServerConnection {
 
   public List<Message> getMessages() throws JSONException, ClientProtocolException, IOException, ParseException {
   
-    String responseText = performMethod(JsonMethod.GETMESSAGES,mUserId);
+    String responseText = performMethod(JsonMethod.GETMESSAGES, mUserId);
     
     JSONObject jsonObject = new JSONObject(responseText);
     jsonObject = jsonObject.getJSONObject(JSON_IDENTIFIER_RESULT);
@@ -203,6 +208,19 @@ public class ServerConnection {
     }
     
     return messages; 
+  }
+  
+  public boolean sendMessage(String receiverName, String message, int lastMessageId) throws JSONException, ClientProtocolException, IOException, ParseException {
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put(MessageObjectIdentifiers.USER_ID, mUserId);
+    jsonObject.put(MessageObjectIdentifiers.RECEIVER_NAME, receiverName);
+    jsonObject.put(MessageObjectIdentifiers.MESSAGE, message);
+    jsonObject.put(MessageObjectIdentifiers.LAST_MESSAGE, lastMessageId);
+    
+    String responseText = performMethod(JsonMethod.GETMESSAGES, jsonObject);
+    jsonObject = new JSONObject(responseText);
+    jsonObject = jsonObject.getJSONObject(JSON_IDENTIFIER_RESULT);
+    return jsonObject.getBoolean(JSON_IDENTIFIER_RESULT); 
   }
   
   private Message decodeMessageData(JSONObject jsonObject) throws JSONException, ParseException{
