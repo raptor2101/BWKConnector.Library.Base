@@ -15,6 +15,7 @@ public abstract class AbstractConnectorApp extends Application {
     super.onCreate();
     mDatabase = new Database(this);
     mDatabase.open();
+    mDatabase.resetTimestamps();
   }
   
   @Override

@@ -12,6 +12,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.SystemClock;
+import de.raptor2101.BattleWorldsKronos.Connector.Data.DbHelper.TableGames;
+import de.raptor2101.BattleWorldsKronos.Connector.Data.DbHelper.TableMessage;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Message;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Player;
@@ -359,5 +361,12 @@ public class Database {
     cursor.close();
     
     game.setPlayers(players, winner, activePlayer);
+  }
+  
+  public void resetTimestamps(){
+    long timestamp = SystemClock.elapsedRealtime();
+    String[] timestampValue= new String[]{String.valueOf(timestamp),String.valueOf(timestamp)};
+    mDatabase.execSQL(TableGames.SqlCommands.RESET_ALL_TIMESTAMPS,timestampValue);
+    mDatabase.execSQL(TableMessage.SqlCommands.RESET_ALL_TIMESTAMPS,timestampValue);
   }
 }

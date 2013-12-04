@@ -50,7 +50,7 @@ class DbHelper extends SQLiteOpenHelper {
       public static final String DROP_TABLE = String.format("DROP TABLE IF EXISTS %s", Name);
       public static final String COUNT_UNNOTIFIED_GAMES_IN_STATE = String.format("SELECT COUNT(*) FROM %s WHERE %s = 0 AND %s = ?", Name,Columns.NOTIFIED,Columns.STATE);
       public static final String COUNT_GAMES_IN_STATE = String.format("SELECT COUNT(*) FROM %s WHERE %s = ?", Name, Columns.STATE);
-      public static final String MIN_PERSIST_TIMESTAMP = String.format("SELECT MIN(%s) FROM %s", Columns.PERSISTED, Name);
+      public static final String RESET_ALL_TIMESTAMPS = String.format("UPDATE %s SET %s = ? WHERE %s > ?", Name,Columns.PERSISTED,Columns.PERSISTED);
     }
   }
 
@@ -125,6 +125,7 @@ class DbHelper extends SQLiteOpenHelper {
       public static final String DROP_TABLE = String.format("DROP TABLE IF EXISTS %s", Name);
       public static final String DELETE_OLD_MESSAGES = String.format("DELETE FROM %s WHERE %s = 1 OR %s < ?", Name, Columns.IS_DELETED, Columns.PERSISTED);
       public static final String WHERE_MESSAGES_TO_READ = String.format("%s = 0 AND %s = 0", Columns.IS_DISCARDED,Columns.IS_DELETED);
+      public static final String RESET_ALL_TIMESTAMPS = String.format("UPDATE %s SET %s = ? WHERE %s > ?", Name,Columns.PERSISTED,Columns.PERSISTED);
     }
   }
   
