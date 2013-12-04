@@ -17,8 +17,8 @@ import de.raptor2101.BattleWorldsKronos.Connector.NotificationService;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.Adapters.GameViewAdapter;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.Views.GameView;
-import de.raptor2101.BattleWorldsKronos.Connector.Task.GamesLoaderTask;
-import de.raptor2101.BattleWorldsKronos.Connector.Task.LoaderTask.ResultListener;
+import de.raptor2101.BattleWorldsKronos.Connector.Tasks.GamesLoaderTask;
+import de.raptor2101.BattleWorldsKronos.Connector.Tasks.ServerConnectionTask.ResultListener;
 
 public abstract class AbstractGameListingActivity extends Activity implements ResultListener<GamesLoaderTask.Result>, OnItemClickListener {
   public final static String TAG_EXPENDABLE = "expendable";
@@ -40,7 +40,6 @@ public abstract class AbstractGameListingActivity extends Activity implements Re
     } else {
       listView.setClickable(false);
     }
-    
   }
   
 
@@ -61,12 +60,11 @@ public abstract class AbstractGameListingActivity extends Activity implements Re
   }
 
   private void loadGames(boolean forceReload) {
-    ApplicationSettings settings = new ApplicationSettings(this);
     
-    ProgressBar progressBar = GetProgressBar();
+    ProgressBar progressBar = getProgressBar();
     progressBar.setVisibility(View.VISIBLE);
     
-    GamesLoaderTask task = new GamesLoaderTask(this, settings.getEmail(), settings.getPassword(), this);
+    GamesLoaderTask task = new GamesLoaderTask((AbstractConnectorApp) this.getApplication(), this);
     task.execute(new Boolean[]{forceReload});
     
   }
@@ -86,7 +84,7 @@ public abstract class AbstractGameListingActivity extends Activity implements Re
   
   @Override
   public void handleResult(GamesLoaderTask.Result result) {
-    ProgressBar progressBar = GetProgressBar();
+    ProgressBar progressBar = getProgressBar();
     progressBar.setVisibility(View.GONE);
     if(result != null){
       mGameViewAdapater.setGames(result.getGames());
@@ -114,5 +112,5 @@ public abstract class AbstractGameListingActivity extends Activity implements Re
     }
   }
   
-  protected abstract ProgressBar GetProgressBar();
+  protected abstract ProgressBar getProgressBar();
 }

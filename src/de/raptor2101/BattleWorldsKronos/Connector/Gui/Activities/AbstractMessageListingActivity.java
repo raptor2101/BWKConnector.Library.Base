@@ -14,9 +14,9 @@ import de.raptor2101.BattleWorldsKronos.Connector.ApplicationSettings;
 import de.raptor2101.BattleWorldsKronos.Connector.NotificationService;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.Adapters.MessageViewAdapter;
-import de.raptor2101.BattleWorldsKronos.Connector.Task.LoaderTask.ResultListener;
-import de.raptor2101.BattleWorldsKronos.Connector.Task.MessageLoaderTask;
-import de.raptor2101.BattleWorldsKronos.Connector.Task.MessageLoaderTask.Result;
+import de.raptor2101.BattleWorldsKronos.Connector.Tasks.MessageLoaderTask;
+import de.raptor2101.BattleWorldsKronos.Connector.Tasks.MessageLoaderTask.Result;
+import de.raptor2101.BattleWorldsKronos.Connector.Tasks.ServerConnectionTask.ResultListener;
 
 public abstract class AbstractMessageListingActivity extends Activity implements ResultListener<MessageLoaderTask.Result>{
   private MessageViewAdapter mMessageViewAdapater= new MessageViewAdapter(this);
@@ -57,18 +57,17 @@ public abstract class AbstractMessageListingActivity extends Activity implements
   protected abstract void startWriteMessageActivity();
   
   private void loadMessages(boolean forceReload){
-    ApplicationSettings settings = new ApplicationSettings(this);
     
-    ProgressBar progressBar = GetProgressBar();
+    ProgressBar progressBar = getProgressBar();
     progressBar.setVisibility(View.VISIBLE);
     
-    MessageLoaderTask loaderTask = new MessageLoaderTask(this, settings.getEmail(), settings.getPassword(), this);
+    MessageLoaderTask loaderTask = new MessageLoaderTask((AbstractConnectorApp) this.getApplication(), this);
     loaderTask.execute(new Boolean[]{true});
   }
   
   @Override
   public void handleResult(Result result) {
-    ProgressBar progressBar = GetProgressBar();
+    ProgressBar progressBar = getProgressBar();
     progressBar.setVisibility(View.GONE);
     
     if(result != null){
@@ -93,5 +92,5 @@ public abstract class AbstractMessageListingActivity extends Activity implements
     return super.onMenuItemSelected(featureId, item);
   }
   
-  protected abstract ProgressBar GetProgressBar();
+  protected abstract ProgressBar getProgressBar();
 }

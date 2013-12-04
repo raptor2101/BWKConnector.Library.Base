@@ -217,7 +217,7 @@ public class ServerConnection {
     jsonObject.put(MessageObjectIdentifiers.MESSAGE, message);
     jsonObject.put(MessageObjectIdentifiers.LAST_MESSAGE, lastMessageId);
     
-    String responseText = performMethod(JsonMethod.GETMESSAGES, jsonObject);
+    String responseText = performMethod(JsonMethod.SENDMESSAGE, jsonObject);
     jsonObject = new JSONObject(responseText);
     jsonObject = jsonObject.getJSONObject(JSON_IDENTIFIER_RESULT);
     return jsonObject.getBoolean(JSON_IDENTIFIER_RESULT); 

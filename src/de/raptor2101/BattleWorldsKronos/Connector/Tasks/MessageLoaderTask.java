@@ -1,15 +1,15 @@
-package de.raptor2101.BattleWorldsKronos.Connector.Task;
+package de.raptor2101.BattleWorldsKronos.Connector.Tasks;
 
 import java.util.List;
 
+import de.raptor2101.BattleWorldsKronos.Connector.AbstractConnectorApp;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Database;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Message;
 import de.raptor2101.BattleWorldsKronos.Connector.JSON.ServerConnection;
-import android.content.Context;
 
 public class MessageLoaderTask extends LoaderTask<MessageLoaderTask.Result> {
-  public MessageLoaderTask(Context context, String eMail, String password, ResultListener<Result> resultListener) {
-    super(context, eMail, password, resultListener);
+  public MessageLoaderTask(AbstractConnectorApp app, ResultListener<Result> resultListener) {
+    super(app, resultListener);
   }
 
   public class Result{

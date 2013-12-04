@@ -14,7 +14,7 @@
             android:orientation="horizontal" >
 
             <EditText
-                android:id="@+id/text_write_message_receiver"
+                android:id="@+id/edit_write_message_receiver"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_receiver_name"
@@ -23,7 +23,7 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/text_write_message_text"
+            android:id="@+id/edit_write_message_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_message_text"

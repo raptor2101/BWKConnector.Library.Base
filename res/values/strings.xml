@@ -78,4 +78,7 @@
     
     <string name="server_message_watchlist_prefix">Hello! The user</string>
     <string name="server_message_watchlist_suffix">has added you to his watchlist! If you want to add him to your watchlist too, enter his name in the watchlist window in the chat!</string>
+    
+    <string name="alert_dialog_send_message_error_title">Unable to send your Message</string>
+    <string name="alert_dialog_send_message_error_message">The Server rejects your message.</string>
 </resources>

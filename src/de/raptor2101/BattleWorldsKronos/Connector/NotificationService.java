@@ -15,9 +15,9 @@ import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
-import de.raptor2101.BattleWorldsKronos.Connector.Task.GamesLoaderTask;
-import de.raptor2101.BattleWorldsKronos.Connector.Task.LoaderTask.ResultListener;
-import de.raptor2101.BattleWorldsKronos.Connector.Task.MessageLoaderTask;
+import de.raptor2101.BattleWorldsKronos.Connector.Tasks.GamesLoaderTask;
+import de.raptor2101.BattleWorldsKronos.Connector.Tasks.MessageLoaderTask;
+import de.raptor2101.BattleWorldsKronos.Connector.Tasks.ServerConnectionTask.ResultListener;
 
 public class NotificationService extends Service {
   private static final String ServiceTag = "BWK:Connector-Service";
@@ -100,14 +100,14 @@ public class NotificationService extends Service {
       return;
     }
   
-    
+    AbstractConnectorApp app = (AbstractConnectorApp) this.getApplication();
     if(settings.isNotifyOnGamesEnabled()){
-      mGameLoaderTask = new GamesLoaderTask(this, settings.getEmail(), settings.getPassword(), new GamesLoaderResultListener(this));
+      mGameLoaderTask = new GamesLoaderTask(app, new GamesLoaderResultListener(this));
       mGameLoaderTask.execute(new Boolean[]{true});
     }
     
     if(settings.isNotifyOnMessagesEnabled()){
-      mMessageLoaderTask = new MessageLoaderTask(this, settings.getEmail(), settings.getPassword(), new MessageLoaderResultListener(this));
+      mMessageLoaderTask = new MessageLoaderTask(app, new MessageLoaderResultListener(this));
       mMessageLoaderTask.execute(new Boolean[]{true});
     }
     
