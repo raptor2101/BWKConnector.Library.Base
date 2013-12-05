@@ -12,9 +12,10 @@ public class MessageLoaderTask extends LoaderTask<MessageLoaderTask.Result> {
     super(app, resultListener);
   }
 
-  public class Result{
+  public class Result {
     private final List<Message> mMessages;
     private final int mUnnotifiedMessages;
+
     public List<Message> getMessages() {
       return mMessages;
     }
@@ -22,8 +23,8 @@ public class MessageLoaderTask extends LoaderTask<MessageLoaderTask.Result> {
     public int getUnnotifiedMessages() {
       return mUnnotifiedMessages;
     }
-   
-    public Result(List<Message> messages, int unnotfiedMessages){
+
+    public Result(List<Message> messages, int unnotfiedMessages) {
       mMessages = messages;
       mUnnotifiedMessages = unnotfiedMessages;
     }
@@ -31,26 +32,27 @@ public class MessageLoaderTask extends LoaderTask<MessageLoaderTask.Result> {
 
   @Override
   protected Result doInBackground(Boolean... params) {
-    try{
-      Database database = getDatabase();
-      boolean forceUpdate = params.length > 0 && params[0]; 
-      
-      List<Message> messages = null;
-      if(forceUpdate){
-        ServerConnection connection = getConnection();
-        if (connection != null) {
-          messages = connection.getMessages();
-          database.persistMessage(messages);
+    if (!isCancelled()) {
+      try {
+        Database database = getDatabase();
+        boolean forceUpdate = params.length > 0 && params[0];
+
+        List<Message> messages = null;
+        if (forceUpdate) {
+          ServerConnection connection = getConnection();
+          if (connection != null) {
+            messages = connection.getMessages();
+            database.persistMessage(messages);
+          }
         }
+
+        messages = database.getMessages();
+
+        return new Result(messages, 0);
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
-      
-      messages = database.getMessages();
-      
-      
-      return new Result(messages, 0);
-    } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
     }
     return null;
   }

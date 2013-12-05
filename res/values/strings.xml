@@ -16,7 +16,6 @@
     
     <string name="label_player_info_view_LastMessage">LastMessage</string>
     
-    
     <string name="setting_label_email">E-Mail</string>
     <string name="setting_label_password">Password</string>
     <string name="setting_label_notification">Notfication</string>
@@ -50,6 +49,8 @@
     <string name="notification_messages_unread">There are %d unreaded messages</string>
     <string name="date_format_string">"yyyy.MM.dd HH:mm"</string>
     
+    <string name="write_message_label_respond_to">Respond to</string>
+    
     <string name="hint_receiver_name">receiver</string>
     <string name="hint_message_text">message</string>
     <string-array name="setting_spinner_updatecycle">
@@ -81,4 +82,6 @@
     
     <string name="alert_dialog_send_message_error_title">Unable to send your Message</string>
     <string name="alert_dialog_send_message_error_message">The Server rejects your message.</string>
+    <string name="context_menu_message_delete">Delete</string>
+    <string name="context_menu_message_answer">Answer</string>
 </resources>

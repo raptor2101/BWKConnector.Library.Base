@@ -106,7 +106,8 @@ public class ServerConnection {
     LOGIN(1, "login", serverUrl+"/api/userservice.php"),
     GETMESSAGES(2, "getMessages", serverUrl+"/api/userservice.php"),
     GETGAMES(5, "getGames", serverUrl+"/api/gameservice.php"),
-    SENDMESSAGE(10,"sendMessage",serverUrl+"/api/userservice.php");
+    SENDMESSAGE(10,"sendMessage",serverUrl+"/api/userservice.php"),
+    DELETEMESSAGE(149,"deleteMessage",serverUrl+"/api/userservice.php");
     
 
     private final int mIntValue;
@@ -221,6 +222,10 @@ public class ServerConnection {
     jsonObject = new JSONObject(responseText);
     jsonObject = jsonObject.getJSONObject(JSON_IDENTIFIER_RESULT);
     return jsonObject.getBoolean(JSON_IDENTIFIER_RESULT); 
+  }
+  
+  public void deleteMessage(int messageId) throws ClientProtocolException, JSONException, IOException{
+    performMethod(JsonMethod.DELETEMESSAGE, mUserId, messageId);
   }
   
   private Message decodeMessageData(JSONObject jsonObject) throws JSONException, ParseException{

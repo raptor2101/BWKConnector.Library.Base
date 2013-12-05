@@ -1,8 +1,11 @@
 package de.raptor2101.BattleWorldsKronos.Connector.Data.Entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Message {
+public class Message implements Serializable {
+  private static final long serialVersionUID = -9093944735684552706L;
+  
   private int mMessageId;
   private int mAuthorId;
   private String mAuthorName;
