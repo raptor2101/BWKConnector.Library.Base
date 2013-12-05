@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -20,7 +23,7 @@ import de.raptor2101.BattleWorldsKronos.Connector.Gui.Views.GameView;
 import de.raptor2101.BattleWorldsKronos.Connector.Tasks.GamesLoaderTask;
 import de.raptor2101.BattleWorldsKronos.Connector.Tasks.ServerConnectionTask.ResultListener;
 
-public abstract class AbstractGameListingActivity extends Activity implements ResultListener<GamesLoaderTask.Result>, OnItemClickListener {
+public abstract class AbstractGameListingActivity extends Activity implements ResultListener<GamesLoaderTask.Result>, OnItemClickListener, OnClickListener {
   public final static String TAG_EXPENDABLE = "expendable";
   GameViewAdapter mGameViewAdapater = new GameViewAdapter(this);
   GameView mExpandedView;
@@ -30,10 +33,9 @@ public abstract class AbstractGameListingActivity extends Activity implements Re
     super.onCreate(savedInstanceState);    
     setContentView(R.layout.game_listing_activity);
     
-    
-    
     AbsListView listView = (AbsListView) findViewById(R.id.game_listing);
     listView.setAdapter(mGameViewAdapater);
+   
     if(TAG_EXPENDABLE.equals(listView.getTag())){
       listView.setOnItemClickListener(this);
       listView.setClickable(true);
@@ -42,6 +44,12 @@ public abstract class AbstractGameListingActivity extends Activity implements Re
     }
   }
   
+  @Override
+  protected void onStart() {
+    View view = getTitleImageButton();
+    view.setOnClickListener(this);
+    super.onStart();
+  }
 
   @Override
   protected void onResume() {
@@ -112,5 +120,16 @@ public abstract class AbstractGameListingActivity extends Activity implements Re
     }
   }
   
+  @Override
+  public void onClick(View v) {
+    DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    if(drawerLayout.isDrawerOpen(Gravity.LEFT)){
+      drawerLayout.closeDrawer(Gravity.LEFT);
+    } else {
+      drawerLayout.openDrawer(Gravity.LEFT);
+    }
+  };
+  
   protected abstract ProgressBar getProgressBar();
+  protected abstract View getTitleImageButton();
 }

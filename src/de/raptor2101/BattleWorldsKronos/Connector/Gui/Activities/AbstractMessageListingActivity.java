@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v4.widget.DrawerLayout;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +25,7 @@ import de.raptor2101.BattleWorldsKronos.Connector.Tasks.DeleteMessageTask;
 import de.raptor2101.BattleWorldsKronos.Connector.Tasks.MessageLoaderTask;
 import de.raptor2101.BattleWorldsKronos.Connector.Tasks.ServerConnectionTask.ResultListener;
 
-public abstract class AbstractMessageListingActivity extends Activity {
+public abstract class AbstractMessageListingActivity extends Activity implements OnClickListener{
   private MessageViewAdapter mMessageViewAdapater= new MessageViewAdapter(this);
   
   private class MessageLoaderTaskListener implements ResultListener<MessageLoaderTask.Result>{
@@ -72,6 +75,13 @@ private class DeleteMessageTaskListener implements ResultListener<Void>{
     registerForContextMenu(listView);
   }
 
+  @Override
+  protected void onStart() {
+    View view = getTitleImageButton();
+    view.setOnClickListener(this);
+    super.onStart();
+  }
+  
   @Override
   protected void onResume() {
     super.onResume();
@@ -143,5 +153,16 @@ private class DeleteMessageTaskListener implements ResultListener<Void>{
     return true;
   };
   
+  @Override
+  public void onClick(View v) {
+    DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    if(drawerLayout.isDrawerOpen(Gravity.LEFT)){
+      drawerLayout.closeDrawer(Gravity.LEFT);
+    } else {
+      drawerLayout.openDrawer(Gravity.LEFT);
+    }
+  };
+  
   protected abstract ProgressBar getProgressBar();
+  protected abstract View getTitleImageButton();
 }
