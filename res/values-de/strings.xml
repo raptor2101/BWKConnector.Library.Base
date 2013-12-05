@@ -5,6 +5,9 @@
     
     <string name="action_settings">Einstellungen</string>
     <string name="action_refresh">Aktualisieren</string>
+    <string name="action_write_message">Nachricht schreiben</string>
+    <string name="action_send_message">Senden</string>
+    
     <string name="game_info_view_label_state">"Status:"</string>
     <string name="game_info_view_label_round">"Runde:"</string>
     <string name="game_info_view_label_player_count">Spieler:</string>
@@ -47,6 +50,11 @@
     <string name="notification_messages_unread">%d ungelesene Nachrichten</string>
     <string name="date_format_string">"dd.MM.yyyy HH:mm"</string>
     
+    <string name="write_message_label_respond_to">Antworten auf</string>
+    
+    <string name="hint_receiver_name">Empfänger</string>
+    <string name="hint_message_text">Nachricht</string>
+    
     <string-array name="setting_spinner_updatecycle">
         <item>10 Minuten</item>
         <item>20 Minuten</item>
@@ -69,7 +77,13 @@
     <string name="title_activity_games">Spiele</string>
     <string name="title_activity_messages">Nachrichten</string>
     <string name="title_activity_settings">Einstellungen</string>
+    <string name="title_activity_write_message">Schreibe Nachricht</string>
     
     <string name="server_message_watchlist_prefix">Hallo! Der Benutzer</string>
     <string name="server_message_watchlist_suffix">hat dich seiner Watchlist hinzugefügt! Falls du ihn ebenfalls deiner Watchlist hinzufügen möchtest, tippe seinen Namen in das Watchlist-Fenster im Chat ein!</string>
+    
+    <string name="alert_dialog_send_message_error_title">Nachrichte konnte nicht abgeliefert werden</string>
+    <string name="alert_dialog_send_message_error_message">Der Server hat die Nachricht abgelehnt.</string>
+    <string name="context_menu_message_delete">Löschen</string>
+    <string name="context_menu_message_answer">Antworten</string>
 </resources>

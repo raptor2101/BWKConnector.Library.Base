@@ -2,8 +2,12 @@
 <resources>
 
     <string name="app_name">BWK:Connector</string>
+    
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_write_message">Write Message</string>
+    <string name="action_send_message">Send</string>
+    
     <string name="game_info_view_label_state">"State: "</string>
     <string name="game_info_view_label_round">"Round: "</string>
     <string name="game_info_view_label_player_count">Players: </string>
@@ -11,7 +15,6 @@
     <string name="game_info_view_label_date">Date</string>
     
     <string name="label_player_info_view_LastMessage">LastMessage</string>
-    
     
     <string name="setting_label_email">E-Mail</string>
     <string name="setting_label_password">Password</string>
@@ -33,7 +36,6 @@
     <string name="game_state_aborted">Aborted</string>
     <string name="game_state_unknown">Unknown</string>
     
-    
     <string name="player_state_aborted">Aborted</string>
     <string name="player_state_playing">Playing</string>
     <string name="player_state_lost">Lost</string>
@@ -47,6 +49,10 @@
     <string name="notification_messages_unread">There are %d unreaded messages</string>
     <string name="date_format_string">"yyyy.MM.dd HH:mm"</string>
     
+    <string name="write_message_label_respond_to">Respond to</string>
+    
+    <string name="hint_receiver_name">receiver</string>
+    <string name="hint_message_text">message</string>
     <string-array name="setting_spinner_updatecycle">
         <item>10 minutes</item>
         <item>20 minutes</item>
@@ -65,10 +71,17 @@
     
     <string name="application_icon">Application Icon</string>
     <string name="message_view_label_wrote">wrote at</string>
+    
     <string name="title_activity_games">Games</string>
     <string name="title_activity_messages">Messages</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_write_message">Write Message</string>
     
     <string name="server_message_watchlist_prefix">Hello! The user</string>
     <string name="server_message_watchlist_suffix">has added you to his watchlist! If you want to add him to your watchlist too, enter his name in the watchlist window in the chat!</string>
+    
+    <string name="alert_dialog_send_message_error_title">Unable to send your Message</string>
+    <string name="alert_dialog_send_message_error_message">The Server rejects your message.</string>
+    <string name="context_menu_message_delete">Delete</string>
+    <string name="context_menu_message_answer">Answer</string>
 </resources>
