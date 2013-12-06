@@ -14,6 +14,10 @@ public class DeleteMessageTask extends ServerConnectionTask<Integer, Void>{
     try {
       ServerConnection connection = getConnection();
       
+      if(connection == null){
+        return null;
+      }
+      
       for(Integer messageId:params){
        connection.deleteMessage(messageId); 
       }

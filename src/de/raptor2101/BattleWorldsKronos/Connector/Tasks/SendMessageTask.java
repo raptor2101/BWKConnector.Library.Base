@@ -49,6 +49,11 @@ public class SendMessageTask extends ServerConnectionTask<SendMessageTask.Messag
   protected Result doInBackground(Message... messages) {
     try {
       ServerConnection connection = getConnection();
+      
+      if(connection == null){
+        return new Result(false);
+      }
+      
       boolean allMessagesSendedSuccessFully = false;
       
       for(Message message:messages){

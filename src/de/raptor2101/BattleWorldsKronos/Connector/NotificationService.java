@@ -39,6 +39,10 @@ public class NotificationService extends Service {
     
     @Override
     public void handleResult(MessageLoaderTask.Result result) {
+      if (result == null) {
+        return;
+      }
+      
       if(result.getUnnotifiedMessages()>0){
         mService.generateUnreadMessageNotification(result.getMessages().size());
       }
