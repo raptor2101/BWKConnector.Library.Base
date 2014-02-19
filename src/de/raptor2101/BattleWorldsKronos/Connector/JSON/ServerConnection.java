@@ -22,8 +22,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Game;
+import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.League;
+import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.LeagueMember;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Message;
 import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.Player;
+import de.raptor2101.BattleWorldsKronos.Connector.Data.Entities.User;
 
 public class ServerConnection {
 
@@ -84,6 +87,47 @@ public class ServerConnection {
     public static final String DELETED = "deleted";
   }
   
+  private class UserObjectIdentifiers {
+    private static final String ID = "id";
+    private static final String NAME = "name";
+    private static final String AVATAR_ID = "avatar_id";
+    private static final String REGISTERED = "registered";
+    private static final String LAST_LOGIN = "last_login";
+    private static final String REALNAME = "realname";
+    private static final String HOMETOWN = "howetown";
+    private static final String LANGUAGES = "languages";
+  }
+  
+  private class LeagueObjectIdentifiers {
+    private static final String LEAGUE_ID = "league_id";
+    private static final String ID = "id";
+    private static final String NAME = "name";
+    //private static final String PASSWORD = "password";
+    private static final String IMAGE = "image";
+    private static final String PLAYER_COUNT ="playerCount";
+  }
+  
+  private class LeagueMemberObjectIdentifiers {
+    private static final String USER= "user";
+    private static final String PLAYER_MATCHES= "played_matches";
+    private static final String FINISHED_MATCHES = "finished_matches";
+    private static final String WON_MATCHES = "won_matches";
+    private static final String ON_WATCHLIST = "on_watchlist";
+    private static final String ON_BLOCKLIST = "on_blocklist";
+    private static final String MP_STATS = "mp_stats";
+  }
+  
+  private class LeagueStatisticsObjectIdentifiers {
+    private static final String ID= "statsId";
+    private static final String USER_ID = "userId";
+    private static final String POINTS = "points";
+    private static final String RANK = "rank";
+    private static final String RATING = "rating";
+    private static final String RANKING = "ranking";
+    private static final String FINISHED = "finished";
+    private static final String WON = "won";
+    private static final String HONORABLE = "honorable";
+  }
   
   public static final HashMap<String, Player.State> PLAYER_STATES = new HashMap<String, Player.State>();
   public static final HashMap<String, Game.State> GAME_STATES = new HashMap<String, Game.State>();
@@ -107,7 +151,10 @@ public class ServerConnection {
     GETMESSAGES(2, "getMessages", serverUrl+"/api/userservice.php"),
     GETGAMES(5, "getGames", serverUrl+"/api/gameservice.php"),
     SENDMESSAGE(10,"sendMessage",serverUrl+"/api/userservice.php"),
-    DELETEMESSAGE(149,"deleteMessage",serverUrl+"/api/userservice.php");
+    DELETEMESSAGE(149,"deleteMessage",serverUrl+"/api/userservice.php"),
+    GETLEAGUEDETAILS(10,"getLeagueDetails",serverUrl+"/api/leagueservice.php"),
+    GETLEAGUES(12,"getLeagues",serverUrl+"/api/leagueservice.php"),
+    GETMYLEAGUES(14,"getMyLeagues",serverUrl+"/api/leagueservice.php");
     
 
     private final int mIntValue;
@@ -135,7 +182,7 @@ public class ServerConnection {
   }
 
   private static String JSON_RPC = "2.0";
-  private static String GAME_VERSION = "1.0.11";
+  private static String GAME_VERSION = "1.2.1";
 
   private HttpClient mHttpClient;
 
@@ -159,17 +206,121 @@ public class ServerConnection {
       
       return true;
     } catch (JSONException e) {
-      // TODO Auto-generated catch block
+
       e.printStackTrace();
     }
-    
-    
-    
-    
     
     return false;
   }
 
+  public List<League> getLeagues(Boolean loadMyLeaguesOnly) throws JSONException, ClientProtocolException, IOException, ParseException {
+    String responseText;
+    if(loadMyLeaguesOnly){
+      responseText = performMethod(JsonMethod.GETMYLEAGUES);
+    }else{
+      responseText = performMethod(JsonMethod.GETLEAGUES);
+    }
+        
+    
+    JSONObject jsonObject = new JSONObject(responseText);
+    jsonObject = jsonObject.getJSONObject(JSON_IDENTIFIER_RESULT);
+    
+    JSONArray jsonLeagues = jsonObject.getJSONArray("leagues");
+    
+    List<League> leagues = new ArrayList<League>(jsonLeagues.length());
+    for(int i=0;i<jsonLeagues.length();i++){
+      leagues.add(decodeLeague(jsonLeagues.getJSONObject(i)));
+    }
+    
+    return null;
+  }
+  
+  public List<LeagueMember> getLeageMembers(int leagueId) throws JSONException, ClientProtocolException, IOException, ParseException{
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put(LeagueObjectIdentifiers.LEAGUE_ID, leagueId);
+    
+    
+    String responseText = performMethod(JsonMethod.GETLEAGUEDETAILS,jsonObject);
+    jsonObject = new JSONObject(responseText);
+    jsonObject = jsonObject.getJSONObject(JSON_IDENTIFIER_RESULT);
+    JSONArray jsonMembers = jsonObject.getJSONArray("member");
+    
+    List<LeagueMember> leagues = new ArrayList<LeagueMember>(jsonMembers.length());
+    for(int i=0;i<jsonMembers.length();i++){
+      leagues.add(decodeLeagueMember(jsonMembers.getJSONObject(i)));
+    }
+    
+    return leagues;
+  }
+  
+  private League decodeLeague(JSONObject jsonObject) throws JSONException{
+    League league = new League();
+    
+    league.setId(jsonObject.getInt(LeagueObjectIdentifiers.ID));
+    league.setName(jsonObject.getString(LeagueObjectIdentifiers.NAME));
+    league.setImage(jsonObject.getString(LeagueObjectIdentifiers.IMAGE));
+    league.setPlayerCounter(jsonObject.getInt(LeagueObjectIdentifiers.PLAYER_COUNT));
+    
+    return league;
+  }
+  
+  private User decodeUser(JSONObject jsonObject) throws JSONException, ParseException {
+    User user = new User();
+    
+    user.setId(jsonObject.getInt(UserObjectIdentifiers.ID));
+    user.setName(jsonObject.getString(UserObjectIdentifiers.NAME));
+    user.setAvatarId(jsonObject.getString(UserObjectIdentifiers.AVATAR_ID));
+    
+    String dateString = jsonObject.getString(UserObjectIdentifiers.REGISTERED);
+    user.setRegistered(DateFormat.parse(dateString));
+    
+    dateString = jsonObject.getString(UserObjectIdentifiers.LAST_LOGIN);
+    user.setLastLogin(DateFormat.parse(dateString));
+    
+    user.setRealname(jsonObject.getString(UserObjectIdentifiers.REALNAME));
+    user.setHometown(jsonObject.getString(UserObjectIdentifiers.HOMETOWN));
+    String languagesString = jsonObject.getString(UserObjectIdentifiers.LANGUAGES);
+    List<User.Language> languages = new ArrayList<User.Language>();
+    user.setLanguages(languages);
+    
+    return user;
+  }
+  
+  private LeagueMember decodeLeagueMember(JSONObject jsonObject) throws JSONException, ParseException{
+    LeagueMember leagueMember = new LeagueMember();
+    
+    User user = decodeUser(jsonObject.getJSONObject(LeagueMemberObjectIdentifiers.USER));
+    leagueMember.setUser(user);
+    
+    leagueMember.setPlayedMatches(jsonObject.getInt(LeagueMemberObjectIdentifiers.PLAYER_MATCHES));
+    leagueMember.setFinishedMatches(jsonObject.getInt(LeagueMemberObjectIdentifiers.FINISHED_MATCHES));
+    leagueMember.setWonMatches(jsonObject.getInt(LeagueMemberObjectIdentifiers.WON_MATCHES));
+    leagueMember.setOnWatchlist(jsonObject.getBoolean(LeagueMemberObjectIdentifiers.ON_WATCHLIST));
+    leagueMember.setOnBlocklist(jsonObject.getBoolean(LeagueMemberObjectIdentifiers.ON_BLOCKLIST));
+    
+    LeagueMember.Statistic statistic = decodeLeagueMemberStatistic(jsonObject.getJSONObject(LeagueMemberObjectIdentifiers.MP_STATS));
+    leagueMember.setStatistic(statistic);
+    
+    return leagueMember;
+  }
+  
+  
+  private LeagueMember.Statistic decodeLeagueMemberStatistic(JSONObject jsonObject) throws JSONException{
+    LeagueMember.Statistic statistic = new LeagueMember.Statistic();
+    
+    statistic.setId(jsonObject.getInt(LeagueStatisticsObjectIdentifiers.ID));
+    statistic.setUserId(jsonObject.getInt(LeagueStatisticsObjectIdentifiers.USER_ID));
+    statistic.setPoints(jsonObject.getInt(LeagueStatisticsObjectIdentifiers.POINTS));
+    statistic.setRank(jsonObject.getInt(LeagueStatisticsObjectIdentifiers.RANK));
+    statistic.setRating(jsonObject.getInt(LeagueStatisticsObjectIdentifiers.RATING));
+    statistic.setRanking(jsonObject.getInt(LeagueStatisticsObjectIdentifiers.RANKING));
+    statistic.setFinished(jsonObject.getInt(LeagueStatisticsObjectIdentifiers.FINISHED));
+    statistic.setWon(jsonObject.getInt(LeagueStatisticsObjectIdentifiers.WON));
+    statistic.setHonorable(jsonObject.getInt(LeagueStatisticsObjectIdentifiers.HONORABLE));
+    
+    return statistic;
+  }
+  
   public List<Game> getGames() throws JSONException, ClientProtocolException, IOException, ParseException {
     String responseText = performMethod(JsonMethod.GETGAMES);
     
