@@ -60,11 +60,12 @@
             android:layout_marginRight="3dp"
             android:gravity="right"
             android:textStyle="normal" />
+    </LinearLayout>
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -75,22 +76,28 @@
             android:text="@string/game_info_view_label_date"
             android:textStyle="normal" />
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
         <TextView
             android:id="@+id/text_game_info_view_Date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:gravity="left"
+            android:gravity="right"
             android:textStyle="normal" />
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/layout_game_info_view_PlayerBox"
+    <LinearLayout
+        android:id="@+id/layout_game_info_view_PlayerBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="2dp" 
         android:background="@drawable/border"
-        android:visibility="gone">
+        android:orientation="vertical"
+        android:padding="2dp"
+        android:visibility="gone" >
 
         <LinearLayout
             android:layout_width="match_parent"
