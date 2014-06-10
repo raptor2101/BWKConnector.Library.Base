@@ -182,7 +182,7 @@ public class ServerConnection {
   }
 
   private static String JSON_RPC = "2.0";
-  private static String GAME_VERSION = "1.2.1";
+  private static String GAME_VERSION = "1.3.5";
 
   private HttpClient mHttpClient;
 
