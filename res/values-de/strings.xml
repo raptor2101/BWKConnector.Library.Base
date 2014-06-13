@@ -86,4 +86,9 @@
     <string name="alert_dialog_send_message_error_message">Der Server hat die Nachricht abgelehnt.</string>
     <string name="context_menu_message_delete">Löschen</string>
     <string name="context_menu_message_answer">Antworten</string>
+    
+    <string name="general_overview_widget_pending_games">Wartende Games: </string>
+    <string name="general_overview_widget_running_games">Laufende Games: </string>
+    <string name="general_overview_widget_open_games">Offene Games: </string>
+    <string name="general_overview_widget_last_update">Letzes Update: </string>
 </resources>

@@ -6,15 +6,18 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.os.AsyncTask.Status;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
+import de.raptor2101.BattleWorldsKronos.Connector.Gui.WidgetProviders.GeneralOverviewProvider;
 import de.raptor2101.BattleWorldsKronos.Connector.Tasks.GamesLoaderTask;
 import de.raptor2101.BattleWorldsKronos.Connector.Tasks.MessageLoaderTask;
 import de.raptor2101.BattleWorldsKronos.Connector.Tasks.ServerConnectionTask.ResultListener;
@@ -39,13 +42,15 @@ public class NotificationService extends Service {
     
     @Override
     public void handleResult(MessageLoaderTask.Result result) {
-      if (result == null) {
-        return;
-      }
       
-      if(result.getUnnotifiedMessages()>0){
+      if (result != null && result.getUnnotifiedMessages()>0) {
         mService.generateUnreadMessageNotification(result.getMessages().size());
       }
+      
+      if(mService.mGameLoaderTask != null && mService.mGameLoaderTask.getStatus() ==Status.FINISHED){
+        mService.stopSelf();
+      }
+
     }
   }
   
@@ -58,15 +63,21 @@ public class NotificationService extends Service {
     
     @Override
     public void handleResult(GamesLoaderTask.Result result) {
-      if (result == null) {
-        return;
-      }
-
-      
-      if (result.getUnnotifiedPendingGames() > 0) {
+      if (result != null && result.getUnnotifiedPendingGames() > 0) {
         mService.generatePendingGamesNotification(result.getPendingGamesCount());
+        
+        Intent intent = new Intent(mService, GeneralOverviewProvider.class);
+        intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+        // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
+        // since it seems the onUpdate() is only fired on that:
+        int[] ids = {R.xml.general_overview_widgetinfo};
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        sendBroadcast(intent);
       }
       
+      if(mService.mMessageLoaderTask != null && mService.mMessageLoaderTask.getStatus() ==Status.FINISHED){
+        mService.stopSelf();
+      }
     }
   }
   

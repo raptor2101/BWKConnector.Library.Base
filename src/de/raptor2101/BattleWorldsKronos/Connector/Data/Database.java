@@ -239,6 +239,16 @@ public class Database {
     Cursor cursor = mDatabase.rawQuery(DbHelper.TableGames.SqlCommands.COUNT_GAMES_IN_STATE, new String[]{String.valueOf(Game.State.PENDING.getValue())});
     return getSingleIntFromCursor(cursor);
   }
+  
+  public int getRunningGamesCount() {
+    Cursor cursor = mDatabase.rawQuery(DbHelper.TableGames.SqlCommands.COUNT_GAMES_IN_STATE, new String[]{String.valueOf(Game.State.WAITING.getValue())});
+    return getSingleIntFromCursor(cursor);
+  }
+  
+  public int getOpenGamesCount() {
+    Cursor cursor = mDatabase.rawQuery(DbHelper.TableGames.SqlCommands.COUNT_GAMES_IN_STATE, new String[]{String.valueOf(Game.State.OPEN.getValue())});
+    return getSingleIntFromCursor(cursor);
+  }
 
   public int getUnnotfiedPendingGamesCount() {
     Cursor cursor = mDatabase.rawQuery(DbHelper.TableGames.SqlCommands.COUNT_UNNOTIFIED_GAMES_IN_STATE, new String[]{String.valueOf(Game.State.PENDING.getValue())});

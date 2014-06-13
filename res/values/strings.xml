@@ -84,4 +84,9 @@
     <string name="alert_dialog_send_message_error_message">The Server rejects your message.</string>
     <string name="context_menu_message_delete">Delete</string>
     <string name="context_menu_message_answer">Answer</string>
+    
+    <string name="general_overview_widget_pending_games">Pending Games: </string>
+    <string name="general_overview_widget_running_games">Running Games: </string>
+    <string name="general_overview_widget_open_games">Open Games: </string>
+    <string name="general_overview_widget_last_update">Last Update: </string>
 </resources>

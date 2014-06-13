@@ -35,17 +35,23 @@ public class GamesLoaderTask extends LoaderTask<GamesLoaderTask.Result> {
     public int getOpenGames() {
       return mOpenGames;
     }
+    
+    public int getRunningGames() {
+      return mRunningGames;
+    }
 
     private final int mPendingGamesCount;
     private final int mUnnotifiedOpenGames;
     private final int mOpenGames;
+    private final int mRunningGames;
     
-    public Result(List<Game> games, int unnotfiedPendingGames, int pendingGamesCount, int unnotifiedOpenGames, int openGames){
+    public Result(List<Game> games, int unnotfiedPendingGames, int pendingGamesCount, int unnotifiedOpenGames, int openGames, int runningGames){
       mGames = games;
       mUnnotifiedPendingGames = unnotfiedPendingGames;
       mUnnotifiedOpenGames = unnotifiedOpenGames;
       mPendingGamesCount = pendingGamesCount;
       mOpenGames = openGames;
+      mRunningGames = runningGames;
     }
   }
 
@@ -68,10 +74,12 @@ public class GamesLoaderTask extends LoaderTask<GamesLoaderTask.Result> {
       
       int unnotifiedPendingGames = database.getUnnotfiedPendingGamesCount();
       int pendingGames = database.getPendingGamesCount();
+      int runningGames = database.getRunningGamesCount();
+      int openGames = database.getOpenGamesCount();
       
       database.setAllGamesNotified();
       
-      return new Result(games, unnotifiedPendingGames, pendingGames, 0, 0);
+      return new Result(games, unnotifiedPendingGames, pendingGames, 0, openGames, runningGames );
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
