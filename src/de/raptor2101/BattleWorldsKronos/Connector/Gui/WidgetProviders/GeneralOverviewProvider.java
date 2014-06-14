@@ -2,13 +2,16 @@ package de.raptor2101.BattleWorldsKronos.Connector.Gui.WidgetProviders;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import de.raptor2101.BattleWorldsKronos.Connector.AbstractConnectorApp;
 import de.raptor2101.BattleWorldsKronos.Connector.ApplicationSettings;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
+import de.raptor2101.BattleWorldsKronos.Connector.Gui.R.id;
 import de.raptor2101.BattleWorldsKronos.Connector.Tasks.GamesLoaderTask;
 import de.raptor2101.BattleWorldsKronos.Connector.Tasks.GamesLoaderTask.Result;
 import de.raptor2101.BattleWorldsKronos.Connector.Tasks.ServerConnectionTask.ResultListener;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -39,15 +42,29 @@ public class GeneralOverviewProvider extends AppWidgetProvider implements Result
   @Override
   public void handleResult(Result result) {
     final int N = mAppWidgetIds.length;
+    Locale locale = mContext.getResources().getConfiguration().locale;
+    SimpleDateFormat sdf = new SimpleDateFormat(mContext.getResources().getString(R.string.date_format_string), locale);
+    AbstractConnectorApp app = (AbstractConnectorApp)mContext.getApplicationContext();
+    
+    Intent intent = new Intent(mContext, app.getGameListingActivityClass());
+    PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+    
+    String pendingGames = String.format(locale,"%d", result.getPendingGamesCount());
+    String runningGames = String.format(locale,"%d", result.getRunningGames());
+    String openGames = String.format(locale,"%d", result.getOpenGames());
+    String timestamp = sdf.format(new Date());
+    
     for (int i = 0; i < N; i++) {
       int appWidgetId = mAppWidgetIds[i];
-      SimpleDateFormat sdf = new SimpleDateFormat(mContext.getResources().getString(R.string.date_format_string), mContext.getResources().getConfiguration().locale);
+      
+      
       
       RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.general_overview_widget);
-      views.setTextViewText(R.id.general_overview_text_pending_games, String.format("%d", result.getPendingGamesCount()));
-      views.setTextViewText(R.id.general_overview_text_running_games, String.format("%d", result.getRunningGames()));
-      views.setTextViewText(R.id.general_overview_text_open_games, String.format("%d", result.getOpenGames()));
-      views.setTextViewText(R.id.general_overview_text_last_update, sdf.format(new Date()));
+      views.setTextViewText(R.id.general_overview_text_pending_games, pendingGames);      
+      views.setTextViewText(R.id.general_overview_text_running_games, runningGames);
+      views.setTextViewText(R.id.general_overview_text_open_games, openGames);
+      views.setTextViewText(R.id.general_overview_text_last_update, timestamp);
+      views.setOnClickPendingIntent(R.id.general_overview_layout, pendingIntent);
       
       mAppWidgetManager.updateAppWidget(appWidgetId, views);
     }    
