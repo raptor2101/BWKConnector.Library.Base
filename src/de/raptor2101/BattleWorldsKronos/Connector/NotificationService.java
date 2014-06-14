@@ -142,8 +142,9 @@ public class NotificationService extends Service {
     builder.setContentIntent(resultPendingIntent);
     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-    // die 1 sollte ich mir noch sinnvoll ermittlen
     notificationManager.notify(NotificationIdPendingGames, builder.build());
+    
+    GeneralOverviewProvider.Update(this);
   }
   
   private void generateUnreadMessageNotification(int unreadMessages) {
@@ -160,7 +161,6 @@ public class NotificationService extends Service {
     builder.setContentIntent(resultPendingIntent);
     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-    // die 1 sollte ich mir noch sinnvoll ermittlen
     notificationManager.notify(NotificationIdUnreadMessages, builder.build());
   }
 

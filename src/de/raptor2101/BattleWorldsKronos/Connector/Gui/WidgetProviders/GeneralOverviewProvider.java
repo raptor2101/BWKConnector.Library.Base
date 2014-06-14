@@ -11,7 +11,9 @@ import de.raptor2101.BattleWorldsKronos.Connector.Tasks.GamesLoaderTask.Result;
 import de.raptor2101.BattleWorldsKronos.Connector.Tasks.ServerConnectionTask.ResultListener;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.SystemClock;
 import android.widget.RemoteViews;
 
@@ -48,6 +50,16 @@ public class GeneralOverviewProvider extends AppWidgetProvider implements Result
       views.setTextViewText(R.id.general_overview_text_last_update, sdf.format(new Date()));
       
       mAppWidgetManager.updateAppWidget(appWidgetId, views);
-    }
+    }    
+  }
+  
+  public static void Update(Context context){
+    AppWidgetManager manager = AppWidgetManager.getInstance(context);
+    int[] widgetIds = manager.getAppWidgetIds(new ComponentName(context.getApplicationContext(), GeneralOverviewProvider.class));
+    
+    Intent intent = new Intent();
+    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
+    context.sendBroadcast(intent);
   }
 }

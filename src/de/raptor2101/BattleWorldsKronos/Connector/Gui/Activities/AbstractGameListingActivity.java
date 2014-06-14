@@ -20,6 +20,7 @@ import de.raptor2101.BattleWorldsKronos.Connector.NotificationService;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.R;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.Adapters.GameViewAdapter;
 import de.raptor2101.BattleWorldsKronos.Connector.Gui.Views.GameView;
+import de.raptor2101.BattleWorldsKronos.Connector.Gui.WidgetProviders.GeneralOverviewProvider;
 import de.raptor2101.BattleWorldsKronos.Connector.Tasks.GamesLoaderTask;
 import de.raptor2101.BattleWorldsKronos.Connector.Tasks.ServerConnectionTask.ResultListener;
 
@@ -97,6 +98,7 @@ public abstract class AbstractGameListingActivity extends Activity implements Re
     if(result != null){
       mGameViewAdapater.setGames(result.getGames());
       NotificationService.resetPendingGames(this);
+      GeneralOverviewProvider.Update(this);
     }
   }
   
